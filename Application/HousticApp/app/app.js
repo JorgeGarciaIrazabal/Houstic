@@ -1,6 +1,5 @@
 import {App, IonicApp, Platform} from 'ionic-angular';
 import {GettingStartedPage} from './pages/getting-started/getting-started';
-import {ButtonsGuide} from './pages/buttons-guide/buttons-guide';
 import {ListPage} from './pages/list/list';
 
 
@@ -22,7 +21,6 @@ class MyApp {
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Getting Started', component: GettingStartedPage },
-      { title: 'Buttons Guide', component: ButtonsGuide },
       { title: 'List', component: ListPage }
     ];
 
