@@ -20,7 +20,7 @@ app = web.Application([
 if __name__ == '__main__':
     Hubs.importAllHubs()
     HubsInspector.inspectImplementedHubs()
-    HubsInspector.constructJSFile("../Application")
+    HubsInspector.constructJSFile("../Application/HousticApp/www/build/js")
     HubsInspector.constructPythonFile("../LocalServer/libs")
     log.debug("starting...")
     app.listen(9517)
