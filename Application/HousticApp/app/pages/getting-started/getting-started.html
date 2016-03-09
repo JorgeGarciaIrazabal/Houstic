@@ -3,18 +3,28 @@
   <button menuToggle>
     <ion-icon name="menu"></ion-icon>
   </button>
-  <ion-title>Getting Started</ion-title>
+  <ion-title>Housetic App</ion-title>
 </ion-navbar>
 
 
 <ion-content padding class="getting-started">
 
-  <h3>Getting Started</h3>
+  <h3>Welcome Natalia & Jorge</h3>
   <p>
-     Get it started!
+     This app will help us to control our house from the device
   </p>
+
   <p>
-    <button primary menuToggle>Toggle Menu</button>
+     This project will be awesome!!
+  </p>
+
+  <p>
+    <button (click)="conectarHub()">Connect!</button>
+    <button (click)="desconectarHub()">Disconect!</button>
+  </p>
+
+  <p>
+    <button primary menuToggle>Open Menu</button>
   </p>
 
 </ion-content>
