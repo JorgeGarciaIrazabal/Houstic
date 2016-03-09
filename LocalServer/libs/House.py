@@ -1,19 +1,21 @@
 import logging
 
 import time
-from ws4py.exc import WebSocketException
 
+import sys
 from wshubsapi import Asynchronous
+
+from libs import utils
 from libs.SocketHandler import createSocketServer
 from libs.WSHubsApi import HubsAPI
 
 
 class House:
     log = logging.getLogger(__name__)
-    HOUSE_IP = "127.0.0.1"
+    HOUSE_IP = utils.getLocalIp()
     HOUSE_PORT = 7159
     GLOBAL_RECONNECT_TIMEOUT = 1
-    GLOBAL_SERVER_WS_URL = "ws://127.0.0.1:9517/house"
+    GLOBAL_SERVER_WS_URL = "ws://{}:9517/house".format(sys.argv[1] if len(sys.argv) > 1 else "127.0.0.1")
 
     def __init__(self, ):
         self.globalServerAPI = None

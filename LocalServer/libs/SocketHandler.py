@@ -4,11 +4,11 @@ from _socket import error
 
 from wshubsapi.utils import MessageSeparator
 
-log = logging.getLogger(__name__)
-log.addHandler(logging.NullHandler())
-
 
 class SocketHandler(SocketServer.BaseRequestHandler):
+    log = logging.getLogger(__name__)
+    log.addHandler(logging.NullHandler())
+
     def __init__(self, request, client_address, server):
         SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
         # never enter here :O
@@ -17,6 +17,7 @@ class SocketHandler(SocketServer.BaseRequestHandler):
         """:type : MessageSeparator"""
 
     def setup(self):
+        self.log.debug("Connection started in client address: {}".format(self.client_address))
         self.__messageSeparator = MessageSeparator()
 
     def writeMessage(self, message):
@@ -31,7 +32,7 @@ class SocketHandler(SocketServer.BaseRequestHandler):
                     self.finish()
                     break
             except:
-                log.exception("error receiving data")
+                self.log.exception("error receiving data")
             else:
                 for m in self.__messageSeparator.addData(data):
                     self.handleMessage(m)

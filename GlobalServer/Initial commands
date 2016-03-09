@@ -19,10 +19,8 @@ apt-get install upstart-sysv
 
 Note: pip can be in /urs/local/bin
 
-globalPath : /var/www/BE
-
 ----- usefull comand lines
 
 pkill -9 python
-nohup python HiNowServer.py & //to run server in background
-python HiNowServer.py //run server
+nohup python [appname].py & //to run server in background
+python [appname].py //run server
