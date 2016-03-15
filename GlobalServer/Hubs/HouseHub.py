@@ -4,7 +4,7 @@ from wshubsapi.Hub import Hub
 class HouseHub(Hub):
     def getAllComponents(self, houseId):
         # query components from houseId //maybe sender could be necessary (parent control???)
-        return "I am from global server"
+        return dict(component1="cason", component2="casita")
 
     def get_sensor_value(self, sensorId):
         # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)

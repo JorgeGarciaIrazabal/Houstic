@@ -14,7 +14,7 @@ apt-get install python-sqlalchemy
 apt-get install nano
 apt-get install upstart-sysv
 
-# add here mongo commands, see: http://mongoengine.org/
+# add here mongo commands, see: http://mongoengine.org/  http://docs.mongoengine.org/
 
 
 Note: pip can be in /urs/local/bin
