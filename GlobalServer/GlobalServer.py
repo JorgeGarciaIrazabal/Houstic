@@ -2,23 +2,22 @@ import os
 import logging
 import logging.config
 import json
-
 import sys
+
 from mongoengine import connect
 from tornado import web, ioloop
 from wshubsapi import Asynchronous
-
-import Hubs
-
 from wshubsapi.HubsInspector import HubsInspector
 from wshubsapi.ConnectionHandlers.Tornado import ConnectionHandler
 
+import Hubs
 from Hubs.HouseHub import HouseHub
+from libs.Config import Config
 
 logging.config.dictConfig(json.load(open('logging.json')))
 log = logging.getLogger(__name__)
 
-settings = {"static_path": os.path.join(os.path.dirname(__file__), "../_static")}
+settings = {"static_path": os.path.join(os.path.dirname(__file__), "_static")}
 
 app = web.Application([
     (r'/(.*)', ConnectionHandler),
@@ -33,13 +32,14 @@ def __askAction():
 
 
 if __name__ == '__main__':
-    connect('houstic' if len(sys.argv) <= 1 else sys.argv[1])
+    Config.readConfigFile()
+    connect(**Config.mongo)
     Hubs.importAllHubs()
     HubsInspector.inspectImplementedHubs()
-    HubsInspector.constructJSFile("../Application/HousticApp/www/build/js")
-    HubsInspector.constructPythonFile("../LocalServer/libs")
+    HubsInspector.constructJSFile(Config.JSClientPath)
+    HubsInspector.constructPythonFile(Config.PyClientPath)
     log.debug("starting...")
-    app.listen(9517)
+    app.listen(Config.port)
     __askAction()
 
     ioloop.IOLoop.instance().start()

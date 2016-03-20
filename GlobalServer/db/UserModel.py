@@ -18,4 +18,5 @@ class User(Document):
 
 if __name__ == '__main__':
     connect("houstic")
-    print User.objects.first().only("houses")
+    print User.objects.only("houses").first()
+    print "end"

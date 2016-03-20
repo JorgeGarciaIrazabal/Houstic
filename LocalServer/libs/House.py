@@ -1,27 +1,21 @@
 import logging
-
 import time
 
-import sys
 from wshubsapi import Asynchronous
 
-from libs import utils
 from libs.ModuleConnection import createSocketServer, ModuleConnection
 from libs.WSHubsApi import HubsAPI
+from Config import Config
 
 
 class House:
     log = logging.getLogger(__name__)
-    HOUSE_IP = utils.getLocalIp()
-    HOUSE_PORT = 7159
-    GLOBAL_RECONNECT_TIMEOUT = 1
-    GLOBAL_SERVER_WS_URL = "ws://{}:9517/1".format(sys.argv[1] if len(sys.argv) > 1 else "127.0.0.1")
 
     def __init__(self, ):
         self.globalServerAPI = None
         """:type : HubsAPI """
         # self.componentCommunicationManager
-        self.houseServer = createSocketServer(self.HOUSE_IP, self.HOUSE_PORT)
+        self.houseServer = createSocketServer(Config.houseIP, Config.housePort)
         self.moduleConnections = []
         """:type : list of libs.SocketHandler.SocketHandler"""
         ModuleConnection.onOpen = lambda handler: self.moduleConnections.append(handler)
@@ -29,13 +23,13 @@ class House:
     @Asynchronous.asynchronous()
     def __autoReconnectGlobalServerAPI(self, *args):
         try:
-            self.globalServerAPI = HubsAPI(self.GLOBAL_SERVER_WS_URL)
+            self.globalServerAPI = HubsAPI(Config.getGlobalWsURL(1))
             self.constructClientAPI()
             self.globalServerAPI.wsClient.closed = self.__autoReconnectGlobalServerAPI
             self.globalServerAPI.connect()
         except:
             self.log.exception("unable to connect to global server")
-            time.sleep(self.GLOBAL_RECONNECT_TIMEOUT)
+            time.sleep(Config.globalReconnectTimeout)
             self.__autoReconnectGlobalServerAPI()
 
     @Asynchronous.asynchronous()
