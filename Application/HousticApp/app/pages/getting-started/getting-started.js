@@ -13,11 +13,15 @@ export class GettingStartedPage {
   constructor(nav, navParams) {
     this.nav = nav;
     this.hubsApi = new HubsAPI('ws://127.0.0.1:9517/');
+    this.conectarHub();
   }
 
   conectarHub() {
-    this.hubsApi.connect();
-    console.log('Connected');
+    this.hubsApi.connect().done(function () {
+        console.log('Connected');
+    }, function (error){
+        console.error(error);
+    });
   }
 
   desconectarHub() {
@@ -28,8 +32,8 @@ export class GettingStartedPage {
     this.nav.push(ButtonsGuide);
   }
 
-  sendToAll() {
-    this.hubsApi.HouseHub.server.getAllComponents(1).done(function (response){
+  sendToAll(value) {
+    this.hubsApi.HouseHub.server.setActuatorValue(0, value).done(function (response){
       console.log(JSON.stringify(response));
     },function (message){
       console.log("Error " + message);
