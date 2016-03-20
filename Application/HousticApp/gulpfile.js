@@ -90,6 +90,15 @@ gulp.task('copy.html', function(){
     .pipe(gulp.dest('www/build'));
 });
 
+/******************************************************************************
+ * copy.libs
+ * Copy js libs files to build directory.
+ ******************************************************************************/
+gulp.task('copy.libs', function(){
+  return gulp.src('app/libs/*.js')
+    .pipe(gulp.dest('www/build/js'));
+});
+
 
 /******************************************************************************
  * clean

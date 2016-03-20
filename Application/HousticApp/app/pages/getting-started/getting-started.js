@@ -12,17 +12,29 @@ export class GettingStartedPage {
 
   constructor(nav, navParams) {
     this.nav = nav;
+    this.hubsApi = new HubsAPI('ws://127.0.0.1:9517/');
   }
 
   conectarHub() {
-    console.log('HOLA');
+    this.hubsApi.connect();
+    console.log('Connected');
   }
 
   desconectarHub() {
-    console.log('ADIOS :(');
+    console.log('Disconnected :(');
   }
 
   goButtonsGuide() {
     this.nav.push(ButtonsGuide);
+  }
+
+  sendToAll() {
+    this.hubsApi.HouseHub.server.getAllComponents(1).done(function (response){
+      console.log(JSON.stringify(response));
+    },function (message){
+      console.log("Error " + message);
+    }).finally(function () {
+      console.log("I am in finnally");
+    });
   }
 }
