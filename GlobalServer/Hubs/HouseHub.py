@@ -6,18 +6,20 @@ class HouseHub(Hub):
         # query components from houseId //maybe sender could be necessary (parent control???)
         return dict(component1="cason", component2="casita")
 
-    def get_sensor_value(self, sensorId):
+    def getSensorValue(self, componentId):
         # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)
         # futures = house.getValueFromSensor(sensorID)
         # return futures[0].result()
         return 0
 
-    def set_sensor_value(self, sensorId):
+    def setActuatorValue(self, componentId, value):
         # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)
         # futures = house.getValueFromSensor(sensorID)
         # return futures[0].result()
-        return 0
+        house = self._getClientsHolder().getClient(1)
+        answer = house.componentWrite(None, value).result()
+        return answer
 
-    def __get_house_client(self, componentId):
+    def __getHouseConnection(self, componentId):
         # self._getClientsHolder().getClient(lambda x: x.ID = houseID) ...
         return 0

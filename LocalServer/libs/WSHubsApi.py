@@ -162,7 +162,7 @@ class HubsAPI(object):
         self.wsClient.defaultOnError = lambda error: None
         self.pickler = pickler
         self.UtilsAPIHub = self.__UtilsAPIHub(self.wsClient, self.pickler)
-        self.LoggingHub = self.__LoggingHub(self.wsClient, self.pickler)
+        self.UserHub = self.__UserHub(self.wsClient, self.pickler)
         self.HouseHub = self.__HouseHub(self.wsClient, self.pickler)
 
     @property
@@ -272,7 +272,7 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-    class __LoggingHub(object):
+    class __UserHub(object):
         def __init__(self, wsClient, pickler):
             hubName = self.__class__.__name__[2:]
             self.server = self.__Server(wsClient, hubName, pickler)
@@ -280,6 +280,18 @@ class HubsAPI(object):
 
         class __Server(GenericServer):
             
+            def addHouse(self, house):
+                """
+                :rtype : WSReturnObject
+                """
+                args = list()
+                args.append(house)
+                id = self._getNextMessageID()
+                body = {"hub": self.hubName, "function": "addHouse", "args": args, "ID": id}
+                retFunction = self.wsClient.getReturnFunction(id)
+                self.wsClient.send(self._serializeObject(body))
+                return retFunction
+        
             def getMyHouses(self, ):
                 """
                 :rtype : WSReturnObject
@@ -304,15 +316,26 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-            def loggin(self, user, password):
+            def loggin(self, userJson):
                 """
                 :rtype : WSReturnObject
                 """
                 args = list()
-                args.append(user)
-                args.append(password)
+                args.append(userJson)
                 id = self._getNextMessageID()
                 body = {"hub": self.hubName, "function": "loggin", "args": args, "ID": id}
+                retFunction = self.wsClient.getReturnFunction(id)
+                self.wsClient.send(self._serializeObject(body))
+                return retFunction
+        
+            def removeHouse(self, houseId):
+                """
+                :rtype : WSReturnObject
+                """
+                args = list()
+                args.append(houseId)
+                id = self._getNextMessageID()
+                body = {"hub": self.hubName, "function": "removeHouse", "args": args, "ID": id}
                 retFunction = self.wsClient.getReturnFunction(id)
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
@@ -361,6 +384,18 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
+            def getSensorValue(self, componentId):
+                """
+                :rtype : WSReturnObject
+                """
+                args = list()
+                args.append(componentId)
+                id = self._getNextMessageID()
+                body = {"hub": self.hubName, "function": "getSensorValue", "args": args, "ID": id}
+                retFunction = self.wsClient.getReturnFunction(id)
+                self.wsClient.send(self._serializeObject(body))
+                return retFunction
+        
             def getSubscribedClientsToHub(self, ):
                 """
                 :rtype : WSReturnObject
@@ -373,26 +408,15 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-            def get_sensor_value(self, sensorId):
+            def setActuatorValue(self, componentId, value):
                 """
                 :rtype : WSReturnObject
                 """
                 args = list()
-                args.append(sensorId)
+                args.append(componentId)
+                args.append(value)
                 id = self._getNextMessageID()
-                body = {"hub": self.hubName, "function": "get_sensor_value", "args": args, "ID": id}
-                retFunction = self.wsClient.getReturnFunction(id)
-                self.wsClient.send(self._serializeObject(body))
-                return retFunction
-        
-            def set_sensor_value(self, sensorId):
-                """
-                :rtype : WSReturnObject
-                """
-                args = list()
-                args.append(sensorId)
-                id = self._getNextMessageID()
-                body = {"hub": self.hubName, "function": "set_sensor_value", "args": args, "ID": id}
+                body = {"hub": self.hubName, "function": "setActuatorValue", "args": args, "ID": id}
                 retFunction = self.wsClient.getReturnFunction(id)
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction

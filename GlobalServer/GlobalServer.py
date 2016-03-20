@@ -6,10 +6,14 @@ import json
 import sys
 from mongoengine import connect
 from tornado import web, ioloop
+from wshubsapi import Asynchronous
+
 import Hubs
 
 from wshubsapi.HubsInspector import HubsInspector
 from wshubsapi.ConnectionHandlers.Tornado import ConnectionHandler
+
+from Hubs.HouseHub import HouseHub
 
 logging.config.dictConfig(json.load(open('logging.json')))
 log = logging.getLogger(__name__)
@@ -20,6 +24,14 @@ app = web.Application([
     (r'/(.*)', ConnectionHandler),
 ], **settings)
 
+@Asynchronous.asynchronous()
+def __askAction():
+    while True:
+        text = raw_input("introduce value: ")
+        houseHub = HubsInspector.getHubInstance(HouseHub)
+        houseHub.setActuatorValue(None, 1 if text == "1" else 0)
+
+
 if __name__ == '__main__':
     connect('houstic' if len(sys.argv) <= 1 else sys.argv[1])
     Hubs.importAllHubs()
@@ -28,5 +40,6 @@ if __name__ == '__main__':
     HubsInspector.constructPythonFile("../LocalServer/libs")
     log.debug("starting...")
     app.listen(9517)
+    __askAction()
 
     ioloop.IOLoop.instance().start()
