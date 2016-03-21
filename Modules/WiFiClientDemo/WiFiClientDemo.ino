@@ -39,6 +39,13 @@ void setup() {
   Serial.println(ssid);
   
   WiFi.begin(ssid, password);
+  // the dns server ip
+  IPAddress ip(192, 168, 1, 29);
+  // the router's gateway address:
+  IPAddress gateway(192, 168, 1, 1);
+  // the subnet:
+  IPAddress subnet(255, 255, 255, 0);
+  WiFi.config(ip, gateway, subnet);
   int count = 0;
   
   while (WiFi.status() != WL_CONNECTED) {
