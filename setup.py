@@ -3,11 +3,7 @@ from distutils.core import setup
 setup(
     name='Houstic',
     version='0.1',
-    packages=[
-        'Application.HousticApp.node_modules.gulp-sass.node_modules.node-sass.node_modules.node-gyp.gyp.pylib.gyp',
-        'Application.HousticApp.node_modules.gulp-sass.node_modules.node-sass.node_modules.node-gyp.gyp.pylib.gyp.generator',
-        'LocalServer', 'LocalServer.libs', 'LocalServer.clientDemo', 'GlobalServer.db', 'GlobalServer.Hubs',
-        'GlobalServer.libs'],
+    packages=[],
     url='https://github.com/JorgeGarciaIrazabal/Houstic',
     license='MIT',
     author='jorgeubuntu',
