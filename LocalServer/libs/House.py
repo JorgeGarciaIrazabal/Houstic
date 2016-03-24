@@ -38,7 +38,6 @@ class House:
             text = raw_input("introduce texto: ")
             self.globalServerAPI.HouseHub.client.componentWrite(1, 1 if text == "1" else 0)
 
-
     def initializeCommunications(self):
         self.__autoReconnectGlobalServerAPI()
         self.__askAction()
@@ -47,7 +46,10 @@ class House:
 
     def constructClientAPI(self):
         def __getModuleConnection(componentID):
-            return self.moduleConnections[0]  # todo find the real module
+            try:
+                return next(m for m in self.moduleConnections if m.name==componentID)
+            except StopIteration:
+                raise Exception("Unable to find component with ID: {}".format(componentID))
 
         def getAllComponents():
             return []

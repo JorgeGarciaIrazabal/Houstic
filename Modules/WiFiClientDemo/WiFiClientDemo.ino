@@ -65,7 +65,7 @@ void loop() {
   }
   
     Serial.println("ready to receive messages");
-  clientHandler.sendMessage("NAME", name);
+  clientHandler.sendMessage("ID", name);
   // Read all the lines of the reply from server and print them to Serial
   clientHandler.listenLoop();
   

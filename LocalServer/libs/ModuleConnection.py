@@ -19,6 +19,7 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
         """:type : MessageSeparator"""
         self.headerSeparator = None
         self.future = None
+        self.ID = None
 
     def setup(self):
         self.log.debug("Connection started in client address: {}".format(self.client_address))
@@ -61,12 +62,14 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
         pass
 
     @staticmethod
-    def onMessage(header, message, handler):
+    def onMessage(header, body, handler):
         if header == "RESULT":
-            if message == "SUCCESS":
+            if body == "SUCCESS":
                 handler.future.set_result(True)
             else:
                 handler.future.set_exception(Exception("Error setting executing action"))
+        elif header == "ID":
+            handler.ID = body
 
     @staticmethod
     def onClose(handler):

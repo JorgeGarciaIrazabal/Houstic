@@ -65,3 +65,4 @@ private:
 };
 
 #endif // BATREADER_H //
+

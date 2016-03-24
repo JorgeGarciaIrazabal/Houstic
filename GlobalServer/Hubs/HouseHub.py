@@ -17,7 +17,7 @@ class HouseHub(Hub):
         # futures = house.getValueFromSensor(sensorID)
         # return futures[0].result()
         house = self._getClientsHolder().getClient(1)
-        answer = house.componentWrite(None, value).result()
+        answer = house.componentWrite(componentId, value).result()
         return answer
 
     def __getHouseConnection(self, componentId):

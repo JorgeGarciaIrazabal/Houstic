@@ -28,7 +28,7 @@ def __askAction():
     while True:
         text = raw_input("introduce value: ")
         houseHub = HubsInspector.getHubInstance(HouseHub)
-        houseHub.setActuatorValue(None, 1 if text == "1" else 0)
+        houseHub.setActuatorValue("Caldera", 1 if text == "1" else 0)
 
 
 if __name__ == '__main__':
