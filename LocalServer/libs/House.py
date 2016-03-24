@@ -54,7 +54,7 @@ class House:
 
         def componentWrite(componentID, value):
             module = __getModuleConnection(componentID)
-            module.writeMessage("W-12-" + str(value))  # mode-pin-value
+            print module.writeMessage("W-12-" + str(value)).result()  # mode-pin-value
 
         def componentRead(componentID):
             return None  # create future when receiving value of sensor
