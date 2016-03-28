@@ -1,17 +1,15 @@
-import os
-import logging
-import logging.config
 import json
-import sys
+import logging.config
+import os
 
 from mongoengine import connect
 from tornado import web, ioloop
 from wshubsapi import Asynchronous
 from wshubsapi.HubsInspector import HubsInspector
-from wshubsapi.ConnectionHandlers.Tornado import ConnectionHandler
 
 import Hubs
 from Hubs.HouseHub import HouseHub
+from libs.WSHandler import WSHandler
 from libs.Config import Config
 
 logging.config.dictConfig(json.load(open('logging.json')))
@@ -20,7 +18,7 @@ log = logging.getLogger(__name__)
 settings = {"static_path": os.path.join(os.path.dirname(__file__), "_static")}
 
 app = web.Application([
-    (r'/(.*)', ConnectionHandler),
+    (r'/(.*)', WSHandler),
 ], **settings)
 
 @Asynchronous.asynchronous()

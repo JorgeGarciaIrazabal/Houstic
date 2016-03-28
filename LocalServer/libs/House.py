@@ -47,7 +47,8 @@ class House:
     def constructClientAPI(self):
         def __getModuleConnection(componentID):
             try:
-                return next(m for m in self.moduleConnections if m.name==componentID)
+                # todo: find module form componentId, m.ID should not be componentID
+                return next(m for m in self.moduleConnections if m.ID==componentID)
             except StopIteration:
                 raise Exception("Unable to find component with ID: {}".format(componentID))
 
@@ -55,6 +56,7 @@ class House:
             return []
 
         def componentWrite(componentID, value):
+
             module = __getModuleConnection(componentID)
             print module.writeMessage("W-12-" + str(value)).result()  # mode-pin-value
 

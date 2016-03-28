@@ -21,11 +21,20 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
         self.future = None
         self.ID = None
 
+    def __handleCorrectDataReceived(self, data):
+        try:
+            for m in self.__messageSeparator.addData(data):
+                h, b = m.split(self.headerSeparator)
+                self.onMessage(h, b, self)
+        except:
+            self.log.exception(u"error receiving data with message: {}".format(data))
+
     def setup(self):
         self.log.debug("Connection started in client address: {}".format(self.client_address))
         self.__messageSeparator = MessageSeparator(messageSeparator="~")
         self.headerSeparator = "&&"
         self.future = Future()
+        self.ID = None
         ModuleConnection.onOpen(self)
 
     def writeMessage(self, message):
@@ -47,15 +56,12 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
                 if e.errno == 10054:
                     self.onClose(self)
                     break
+                else:
+                    raise
             except:
                 self.log.exception("error receiving data")
             else:
-                try:
-                    for m in self.__messageSeparator.addData(data):
-                        h, b = m.split(self.headerSeparator)
-                        self.onMessage(h, b, self)
-                except:
-                    self.log.exception(u"error receiving data with message: {}".format(data))
+                self.__handleCorrectDataReceived(data)
 
     @staticmethod
     def onOpen(handler):
@@ -70,12 +76,17 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
                 handler.future.set_exception(Exception("Error setting executing action"))
         elif header == "ID":
             handler.ID = body
+            # todo: we need to extend this hello message receiving:
+            # - moduleID
+            # components list with:
+            #  digital/analog
+            #  input/output
+            #  componentID
+            #  realPin? this might be responsibility of the module
 
     @staticmethod
     def onClose(handler):
         pass
-
-
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):

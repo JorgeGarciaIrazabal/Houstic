@@ -1,13 +1,13 @@
 from mongoengine import DoesNotExist
-from wshubsapi.Hub import Hub
 
+from Hubs.MiddleWareHub import MiddleWareHub
 from db.HouseModel import House
 from db.UserModel import User
 
 
 # not tested
-class UserHub(Hub):
-    def loggin(self, userJson):
+class UserHub(MiddleWareHub):
+    def login(self, userJson):
         try:
             user = User.objects.get(email=userJson["email"])
             user.update(**userJson)  # not sure if update works with just one object
@@ -36,4 +36,3 @@ class UserHub(Hub):
         :rtype: User
         """
         return User.objects.get(id=sender.ID)
-

@@ -1,7 +1,7 @@
-from wshubsapi.Hub import Hub
+from Hubs.MiddleWareHub import MiddleWareHub
 
 
-class HouseHub(Hub):
+class HouseHub(MiddleWareHub):
     def getAllComponents(self, houseId):
         # query components from houseId //maybe sender could be necessary (parent control???)
         return dict(component1="cason", component2="casita")
@@ -12,11 +12,11 @@ class HouseHub(Hub):
         # return futures[0].result()
         return 0
 
-    def setActuatorValue(self, componentId, value):
+    def setActuatorValue(self, componentId, houseID, value):
         # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)
         # futures = house.getValueFromSensor(sensorID)
         # return futures[0].result()
-        house = self._getClientsHolder().getClient(1)
+        house = self._getClientsHolder().getClient(houseID)
         answer = house.componentWrite(componentId, value).result()
         return answer
 

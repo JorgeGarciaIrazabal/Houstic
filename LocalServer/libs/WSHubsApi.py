@@ -316,14 +316,14 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-            def loggin(self, userJson):
+            def login(self, userJson):
                 """
                 :rtype : WSReturnObject
                 """
                 args = list()
                 args.append(userJson)
                 id = self._getNextMessageID()
-                body = {"hub": self.hubName, "function": "loggin", "args": args, "ID": id}
+                body = {"hub": self.hubName, "function": "login", "args": args, "ID": id}
                 retFunction = self.wsClient.getReturnFunction(id)
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
@@ -408,12 +408,13 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-            def setActuatorValue(self, componentId, value):
+            def setActuatorValue(self, componentId, houseID, value):
                 """
                 :rtype : WSReturnObject
                 """
                 args = list()
                 args.append(componentId)
+                args.append(houseID)
                 args.append(value)
                 id = self._getNextMessageID()
                 body = {"hub": self.hubName, "function": "setActuatorValue", "args": args, "ID": id}
