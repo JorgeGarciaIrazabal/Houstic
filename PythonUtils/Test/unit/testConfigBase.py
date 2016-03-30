@@ -5,7 +5,7 @@ import unittest
 from flexmock import flexmock, flexmock_teardown
 
 from ConfigBase import ConfigBase
-from Test.pythonTestUtils.TestUtils import *
+from Test.pythonTestUtils.TestUtils2 import *
 
 
 class TestConfigBase(unittest.TestCase):
