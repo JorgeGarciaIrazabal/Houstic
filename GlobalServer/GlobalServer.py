@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path += [os.path.join(__file__, os.pardir, "PythonUtils")]
+sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
 
 import json
 import logging.config
@@ -33,14 +33,13 @@ def __askAction():
 
 
 if __name__ == '__main__':
-    Config.initConfig()
-    connect(**Config.mongo)
+    connect(**Config.get().mongo)
     Hubs.importAllHubs()
     HubsInspector.inspectImplementedHubs()
-    HubsInspector.constructJSFile(Config.JSClientPath)
-    HubsInspector.constructPythonFile(Config.PyClientPath)
+    HubsInspector.constructJSFile(Config.get().JSClientPath)
+    HubsInspector.constructPythonFile(Config.get().PyClientPath)
     log.debug("starting...")
-    app.listen(Config.port)
+    app.listen(Config.get().port)
     __askAction()
 
     ioloop.IOLoop.instance().start()

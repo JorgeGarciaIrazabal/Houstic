@@ -8,12 +8,13 @@ class ConfigException(Exception):
 
 
 class Config(ConfigBase):
-    port = 9517
-    mongo = dict(db="houstic", host=None, port=None, username=None, password=None)
-    JSClientPath = os.path.join(utils.PROGRAM_PATH, os.pardir, "Application", "app", "libs")
-    PyClientPath = os.path.join(utils.PROGRAM_PATH, os.pardir, "LocalServer", "libs")
+    def __init__(self):
+        super(Config, self).__init__()
+        self.port = 9517
+        self.mongo = dict(db="houstic", host=None, port=None, username=None, password=None)
+        self.JSClientPath = os.path.join(utils.PROGRAM_PATH, os.pardir, "Application", "app", "libs")
+        self.PyClientPath = os.path.join(utils.PROGRAM_PATH, os.pardir, "LocalServer", "libs")
 
-    @classmethod
-    def initConfig(cls):
-        cls.readConfigFile()
-        cls.logConfigValues()
+    def initConfig(self):
+        self.readConfigFile()
+        self.logConfigValues()

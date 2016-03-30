@@ -10,10 +10,13 @@ class ConfigException(Exception):
     pass
 
 
-class ConfigBase:
+class ConfigBase(object):
+    __instance = None
+
     def __init__(self):
         self._log = logging.getLogger(__name__)
         self._configFilePath = utils.PROGRAM_PATH + os.sep + ("config.json" if len(sys.argv) == 1 else sys.argv[1])
+        self.initConfig()
 
     def _ignoreAttributes(self):
         return [
@@ -52,3 +55,10 @@ class ConfigBase:
 
     def initConfig(self):
         raise NotImplementedError()
+
+    @classmethod
+    def get(cls):
+        if cls.__instance is None:
+            cls.__instance = cls()
+        return cls.__instance
+
