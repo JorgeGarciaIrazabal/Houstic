@@ -7,25 +7,27 @@ class ConfigException(Exception):
 
 
 class Config(ConfigBase):
-    houseIP = "" # all available interfaces
-    housePort = 7159
-    globalReconnectTimeout = 1
-    globalIP = "198.100.155.30" # OVH IP
-    globalPort = 9517
 
-    @classmethod
-    def initConfig(cls):
-        cls.readConfigFile()
-        if cls.houseIP is None:
-            cls.houseIP = utils.getLocalIp()
-        cls.logConfigValues()
 
-    @classmethod
-    def getGlobalWsURL(cls, id):
-        return "ws://{0}:{1}/{2}".format(cls.globalIP, cls.globalPort, id)
+    def __init__(self):
+        self.houseIP = "" # all available interfaces
+        self.housePort = 7159
+        self.globalReconnectTimeout = 1
+        self.globalIP = "198.100.155.30" # OVH IP
+        self.globalPort = 9517
+        super(Config, self).__init__()
 
-    @classmethod
-    def _ignoreAttributes(cls):
-        return ConfigBase._ignoreAttributes() + ["getGlobalWsURL"]
+    def initConfig(self):
+        self.readConfigFile()
+        if self.houseIP is None:
+            self.houseIP = utils.getLocalIp()
+        self.logConfigValues()
+
+
+    def getGlobalWsURL(self, ID):
+        return "ws://{0}:{1}/{2}".format(self.globalIP, self.globalPort, ID)
+
+    def _ignoreAttributes(self):
+        return super(Config, self)._ignoreAttributes() + ["getGlobalWsURL"]
 
 

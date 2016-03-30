@@ -15,7 +15,7 @@ class ConfigBase(object):
 
     def __init__(self):
         self._log = logging.getLogger(__name__)
-        self._configFilePath = utils.PROGRAM_PATH + os.sep + ("config.json" if len(sys.argv) == 1 else sys.argv[1])
+        self._configFilePath = ("config.json" if len(sys.argv) == 1 else sys.argv[1])
         self.initConfig()
 
     def _ignoreAttributes(self):

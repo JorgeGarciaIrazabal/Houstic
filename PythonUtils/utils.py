@@ -19,5 +19,6 @@ def getModulePath(frame=None):
     return os.path.dirname(os.path.abspath(unicode(fileName, encoding)))
 
 
-PROGRAM_PATH = os.path.dirname(sys.modules['__main__'].__file__)
-os.chdir(PROGRAM_PATH)
+def setProgramPath(path):
+    os.chdir(path)
+    return os.getcwd()
