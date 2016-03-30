@@ -10,6 +10,7 @@ from Test.pythonTestUtils.TestUtils import *
 
 class TestConfigBase(unittest.TestCase):
     def setUp(self):
+        ConfigBase.initConfig = lambda x: None
         self.configBase = ConfigBase()
         self.configBase._configFilePath = os.path.join(getTemporaryTestFilesPath(), "c-test.json")
         self.configBase.__dict__.update(dict(ep1=1, ep2=2, ep3="3"))
