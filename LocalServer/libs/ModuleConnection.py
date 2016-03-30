@@ -3,7 +3,6 @@ import logging
 from _socket import error
 
 from concurrent.futures._base import Future
-from wshubsapi import Asynchronous
 from wshubsapi.utils import MessageSeparator
 
 

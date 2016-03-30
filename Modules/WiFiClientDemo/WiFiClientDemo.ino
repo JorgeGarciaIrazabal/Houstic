@@ -17,16 +17,17 @@ const char* host = "192.168.1.6";
 int port = 7159;
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(9600);
   delay(10);
-  pinMode(4,OUTPUT);
+  pinMode(2,OUTPUT);
 
   // We start by connecting to a WiFi network
-
+  /*
   Serial.println();
   Serial.println();
   Serial.print("Connecting to  ");
   Serial.println(ssid);
+  */
   
   WiFi.begin(ssid, password);
   IPAddress ip(192, 168, 1, 29);
@@ -37,22 +38,25 @@ void setup() {
   
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+    //Serial.print(".");
     if(count++>30){
       setup();
       return;
     }
   }
-  digitalWrite(4, HIGH);
+  digitalWrite(2, HIGH);
+  /*
   Serial.println("");
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+  */
 }
 
 void loop() {
   delay(1000);
 
+/*
   Serial.print("connecting to ");
   Serial.println(host);
   Serial.println(port);
@@ -71,6 +75,7 @@ void loop() {
   
   Serial.println();
   Serial.println("closing connection");
+  */
 }
 
 

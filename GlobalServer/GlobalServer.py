@@ -1,6 +1,9 @@
+import sys
+import os
+sys.path += [os.path.join(__file__, os.pardir, "PythonUtils")]
+
 import json
 import logging.config
-import os
 
 from mongoengine import connect
 from tornado import web, ioloop
@@ -30,7 +33,7 @@ def __askAction():
 
 
 if __name__ == '__main__':
-    Config.readConfigFile()
+    Config.initConfig()
     connect(**Config.mongo)
     Hubs.importAllHubs()
     HubsInspector.inspectImplementedHubs()

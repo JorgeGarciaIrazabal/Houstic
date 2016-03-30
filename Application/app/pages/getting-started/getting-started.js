@@ -18,19 +18,6 @@ export class GettingStartedPage {
         this.nav = nav;
     }
 
-    conectarHub() {
-        // this.hubsApi.connect().done(function () {
-        //     console.log('Connected');
-        // }, function (error) {
-        //     console.error(error);
-        // });
-    }
-
-    desconectarHub() {
-        this.hubsApi.wsClient.close();
-        console.log('Disconnected :(');
-    }
-
     goButtonsGuide() {
         this.nav.push(ButtonsGuide);
     }
