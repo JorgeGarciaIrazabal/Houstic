@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path += [os.path.join(__file__, os.pardir, "PythonUtils")]
+sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
 
 import json
 import logging.config

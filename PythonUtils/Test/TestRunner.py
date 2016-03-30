@@ -1,6 +1,11 @@
+import os
 import unittest
+import sys
 import xmlrunner
+
 from unit.testConfigBase import TestConfigBase
+
+sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
 
 def __runTests(suite):
     runner = xmlrunner.XMLTestRunner(output='test-reports')
