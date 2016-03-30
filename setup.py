@@ -9,5 +9,5 @@ setup(
     author='jorgeubuntu',
     author_email='jorge.girazabal@gmail.com',
     description='Domotic project using raspberry-pi and esp8266',
-    install_requires= ["wshubsapi==0.6.5a2", "glob2", "tornado", "mongoengine"]
+    install_requires= ["wshubsapi==0.6.5a2", "glob2", "tornado", "mongoengine", 'xmlrunner']
 )

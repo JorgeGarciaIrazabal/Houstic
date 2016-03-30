@@ -1,5 +1,6 @@
 import unittest
 import xmlrunner
+from unit.testConfigBase import TestConfigBase
 
 def __runTests(suite):
     runner = xmlrunner.XMLTestRunner(output='test-reports')
@@ -7,7 +8,6 @@ def __runTests(suite):
 
 
 def runUnitTests():
-    from Test.unit.testConfigBase import TestConfigBase
 
     suite = unittest.TestSuite()
     suite.addTests(unittest.makeSuite(TestConfigBase))
