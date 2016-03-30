@@ -11,11 +11,11 @@ class ConfigException(Exception):
 
 
 class ConfigBase:
-    _log = logging.getLogger(__name__)
-    _configFilePath = utils.PROGRAM_PATH + os.sep + ("config.json" if len(sys.argv) == 1 else sys.argv[1])
+    def __init__(self):
+        self._log = logging.getLogger(__name__)
+        self._configFilePath = utils.PROGRAM_PATH + os.sep + ("config.json" if len(sys.argv) == 1 else sys.argv[1])
 
-    @classmethod
-    def _ignoreAttributes(cls):
+    def _ignoreAttributes(self):
         return [
             "initConfig",
             "readConfigFile",
@@ -24,36 +24,31 @@ class ConfigBase:
             "logConfigValues"
         ]
 
-    @classmethod
-    def getConfigValues(cls):
-        configValues = {k: v for k, v in cls.__dict__.items() if not k.startswith("_")}
-        for attribute in cls._ignoreAttributes():
+    def getConfigValues(self):
+        configValues = {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
+        for attribute in self._ignoreAttributes():
             configValues.pop(attribute, None)
         return configValues
 
-    @classmethod
-    def logConfigValues(cls):
-        cls._log.debug("Config values:\n{}".format(json.dumps(cls.getConfigValues(),  indent=4)))
+    def logConfigValues(self):
+        self._log.debug("Config values:\n{}".format(json.dumps(self.getConfigValues(), indent=4)))
 
-    @classmethod
-    def readConfigFile(cls):
-        if os.path.exists(cls._configFilePath):
+    def readConfigFile(self):
+        if os.path.exists(self._configFilePath):
             try:
-                cls._log.info("Reading config file")
-                with open(cls._configFilePath) as f:
+                self._log.info("Reading config file")
+                with open(self._configFilePath) as f:
                     jsonObject = json.load(f)
-                cls.__dict__.update(jsonObject)
+                self.__dict__.update(jsonObject)
             except ValueError:
-                cls._log.error("Json corrupted so it was ignored, necessary to check!")
+                self._log.error("Json corrupted so it was ignored, necessary to check!")
         else:
-            cls.storeConfigInFile()
+            self.storeConfigInFile()
 
-    @classmethod
-    def storeConfigInFile(cls):
-        with open(cls._configFilePath, "w") as f:
-            configValues = cls.getConfigValues()
+    def storeConfigInFile(self):
+        with open(self._configFilePath, "w") as f:
+            configValues = self.getConfigValues()
             json.dump(configValues, f, indent=4)
 
-    @classmethod
-    def initConfig(cls):
+    def initConfig(self):
         raise NotImplementedError()
