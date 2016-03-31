@@ -1,0 +1,2 @@
+test for jenkins:
+http://stackoverflow.com/questions/11241781/python-unittests-in-jenkins
