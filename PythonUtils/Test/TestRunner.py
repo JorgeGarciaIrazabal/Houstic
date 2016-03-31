@@ -3,7 +3,7 @@ import unittest
 import sys
 import xmlrunner
 
-sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
+sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, "PythonUtils")]
 
 from unit.testConfigBase import TestConfigBase
 
