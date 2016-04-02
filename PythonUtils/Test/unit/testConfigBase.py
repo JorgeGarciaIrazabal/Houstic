@@ -22,7 +22,6 @@ class TestConfigBase(unittest.TestCase):
     def test_readConfigFile_changesConfigParameters(self):
         self.configBase._configFilePath = os.path.join(getTestResourcesPath(), "c-test.json")
         self.configBase.readConfigFile()
-        1/0
 
         self.assertEqual(self.configBase.ep1, 11)
         self.assertEqual(self.configBase.ep2, 22)
