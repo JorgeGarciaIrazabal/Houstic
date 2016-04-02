@@ -9,7 +9,6 @@ from unit.testConfigBase import TestConfigBase
 
 
 def __runTests(suite):
-    1/0
     runner = xmlrunner.XMLTestRunner(output='test-reports')
     runner.run(suite)
 

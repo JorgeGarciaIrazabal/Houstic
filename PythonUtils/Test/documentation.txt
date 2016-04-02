@@ -1,2 +1,4 @@
 test for jenkins:
 http://stackoverflow.com/questions/11241781/python-unittests-in-jenkins
+
+http://nepalonrails.tumblr.com/post/14217655627/set-up-jenkins-ci-on-ubuntu-for-painless-rails3
