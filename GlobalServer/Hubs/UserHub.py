@@ -8,13 +8,7 @@ from db.UserModel import User
 # not tested
 class UserHub(MiddleWareHub):
     def login(self, userJson):
-        try:
-            user = User.objects.get(email=userJson["email"])
-            user.update(**userJson)  # not sure if update works with just one object
-        except DoesNotExist:
-            user = User.from_json(userJson)
-        user.save()
-        return user.id
+        return User.objects.get(email=userJson["email"])
 
     def getMyHouses(self, _sender):
         # sender.ID has to be the user id
