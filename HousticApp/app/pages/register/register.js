@@ -2,10 +2,10 @@ import {Page, NavController, NavParams} from 'ionic-angular';
 import {HubsAPIService} from '../../services/HubsAPI';
 
 @Page({
-  templateUrl: 'build/pages/login/login.html',
+  templateUrl: 'build/pages/register/register.html',
   providers: [HubsAPIService]
 })
-export class Login {
+export class Register {
 
   static get parameters() {
       return [[NavController], [NavParams], [HubsAPIService]];
@@ -17,8 +17,11 @@ export class Login {
       this.nav = nav;
   }
 
-  login() {
-      this.api.UserHub.server.login({email:"email"}).done(function() {
+  register() {
+      this.api.UserHub.server.register({
+        email:"prueba@prueba.com",
+        password:"password"
+      }).done(function() {
         console.log('succes');
       },function(err) {
         console.log('fail', err);

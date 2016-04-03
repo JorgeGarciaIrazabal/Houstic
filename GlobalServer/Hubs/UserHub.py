@@ -3,12 +3,17 @@ from mongoengine import DoesNotExist
 from Hubs.MiddleWareHub import MiddleWareHub
 from db.HouseModel import House
 from db.UserModel import User
-
+import json
 
 # not tested
 class UserHub(MiddleWareHub):
     def login(self, userJson):
         return User.objects.get(email=userJson["email"])
+
+    def register(self, userJson):
+        user = User.from_json(json.dumps(userJson, ensure_ascii=False))
+        user.save()
+        return user
 
     def getMyHouses(self, _sender):
         # sender.ID has to be the user id

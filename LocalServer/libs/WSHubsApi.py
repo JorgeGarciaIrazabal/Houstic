@@ -328,6 +328,18 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
+            def register(self, userJson):
+                """
+                :rtype : WSReturnObject
+                """
+                args = list()
+                args.append(userJson)
+                id = self._getNextMessageID()
+                body = {"hub": self.hubName, "function": "register", "args": args, "ID": id}
+                retFunction = self.wsClient.getReturnFunction(id)
+                self.wsClient.send(self._serializeObject(body))
+                return retFunction
+        
             def removeHouse(self, houseId):
                 """
                 :rtype : WSReturnObject

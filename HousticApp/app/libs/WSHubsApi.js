@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 /* ignore jslint start */
-function HubsAPI(url, serverTimeout, wsClientClass) {
+function HubsAPI(url, serverTimeout) {
     'use strict';
 
     var messageID = 0,
@@ -20,15 +20,7 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
         reconnectTimeout = reconnectTimeout || -1;
         var openPromise = {
             onSuccess : function() {},
-            onError : function(error) {},
-            _connectError: false,
-            done: function (onSuccess, onError) {
-                openPromise.onSuccess = onSuccess;
-                openPromise.onError = onError;
-                if (openPromise._connectError !== false){
-                    openPromise.onError(openPromise._connectError);
-                }
-            }
+            onError : function(error) {}
         };
         function reconnect(error) {
             if (reconnectTimeout !== -1) {
@@ -40,11 +32,10 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
         }
 
         try {
-            this.wsClient = wsClientClass === undefined ? new WebSocket(url) : new wsClientClass(url);
+            this.wsClient = new WebSocket(url);
         } catch (error) {
             reconnect(error);
-            openPromise._connectError = error;
-            return openPromise;
+            return;
         }
 
         this.wsClient.onopen = function () {
@@ -116,7 +107,11 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
             thisApi.callbacks.onMessageError(error);
         };
 
-        return openPromise;
+        return { done: function (onSuccess, onError) {
+                openPromise.onSuccess = onSuccess;
+                openPromise.onError = onError;
+            }
+        };
     };
 
     this.callbacks = {
@@ -178,7 +173,7 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
                             onError.apply(onError, arguments);
                         } else if (thisApi.defaultErrorHandler !== null){
                             var argumentsArray = [callInfo].concat(arguments);
-                            thisApi.defaultErrorHandler.apply(thisApi.defaultErrorHandler, argumentsArray);
+                            thisApi.defaultErrorHandler.apply(thisApi.defaultErrorHandler.apply, argumentsArray);
                         }
                     } finally {
                         delete returnFunctions[ID];
@@ -284,9 +279,14 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
     this.UserHub.server = {
         __HUB_NAME : 'UserHub',
         
-        getMyHouses : function (){
+        subscribeToHub : function (){
             
-            return constructMessage('UserHub', 'getMyHouses', arguments);
+            return constructMessage('UserHub', 'subscribeToHub', arguments);
+        },
+
+        register : function (userJson){
+            
+            return constructMessage('UserHub', 'register', arguments);
         },
 
         getSubscribedClientsToHub : function (){
@@ -304,9 +304,9 @@ function HubsAPI(url, serverTimeout, wsClientClass) {
             return constructMessage('UserHub', 'removeHouse', arguments);
         },
 
-        subscribeToHub : function (){
+        getMyHouses : function (){
             
-            return constructMessage('UserHub', 'subscribeToHub', arguments);
+            return constructMessage('UserHub', 'getMyHouses', arguments);
         },
 
         addHouse : function (house){

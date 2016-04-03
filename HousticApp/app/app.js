@@ -2,6 +2,7 @@ import {App, IonicApp, Platform} from 'ionic-angular';
 import {GettingStartedPage} from './pages/getting-started/getting-started';
 import {HouseListPage} from './pages/houses-list/houses-list';
 import {Login} from './pages/login/login';
+import {Register} from './pages/register/register';
 
 @App({
   templateUrl: 'build/app.html',
@@ -22,7 +23,8 @@ class MyApp {
     this.pages = [
       { title: 'Getting Started', component: GettingStartedPage },
       { title: 'House List', component: HouseListPage },
-      { title: 'Login', component: Login }
+      { title: 'Login', component: Login },
+      { title: 'Register', component: Register }
     ];
 
     this.rootPage = GettingStartedPage;
