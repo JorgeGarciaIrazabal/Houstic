@@ -24,7 +24,7 @@ export class GettingStartedPage {
 
     sendToAll(value) {
         this.api.HouseHub.server.setActuatorValue(0, 1, value)
-            .done((response)=> console.log(JSON.stringify(response)),
+            .then((response)=> console.log(JSON.stringify(response)),
                 (message)=> console.error(JSON.stringify(message)))
             .finally(()=> console.log("Finally"));
     }

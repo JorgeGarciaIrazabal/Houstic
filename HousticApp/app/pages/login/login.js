@@ -18,7 +18,7 @@ export class Login {
   }
 
   login() {
-      this.api.UserHub.server.login({email:"email"}).done(function() {
+      this.api.UserHub.server.login({email:"email"}).then(function() {
         console.log('succes');
       },function(err) {
         console.log('fail', err);

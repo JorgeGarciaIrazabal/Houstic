@@ -21,7 +21,7 @@ export class Register {
       this.api.UserHub.server.register({
         email:"prueba@prueba.com",
         password:"password"
-      }).done(function() {
+      }).then(function() {
         console.log('succes');
       },function(err) {
         console.log('fail', err);

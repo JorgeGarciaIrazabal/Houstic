@@ -316,13 +316,12 @@ class HubsAPI(object):
                 self.wsClient.send(self._serializeObject(body))
                 return retFunction
         
-            def login(self, email, password):
+            def login(self, userJson):
                 """
                 :rtype : WSReturnObject
                 """
                 args = list()
-                args.append(email)
-                args.append(password)
+                args.append(userJson)
                 id = self._getNextMessageID()
                 body = {"hub": self.hubName, "function": "login", "args": args, "ID": id}
                 retFunction = self.wsClient.getReturnFunction(id)
