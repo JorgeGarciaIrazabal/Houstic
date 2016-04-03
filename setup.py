@@ -1,4 +1,7 @@
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 setup(
     name='Houstic',
@@ -9,5 +12,5 @@ setup(
     author='jorgeubuntu',
     author_email='jorge.girazabal@gmail.com',
     description='Domotic project using raspberry-pi and esp8266',
-    install_requires= ["wshubsapi==0.6.5a2", "glob2", "tornado", "mongoengine", 'xmlrunner']
+    install_requires= ["wshubsapi==0.6.6", "glob2", "tornado", "mongoengine", 'xmlrunner']
 )
