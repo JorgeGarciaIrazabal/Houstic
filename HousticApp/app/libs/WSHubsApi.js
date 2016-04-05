@@ -214,8 +214,7 @@ function HubsAPI(url, serverTimeout, wsClientClass, PromiseClass) {
     this.HouseHub = {};
     this.HouseHub.server = {
         __HUB_NAME : 'HouseHub',
-
-        /** @return {Promise}*/
+        
         setActuatorValue : function (componentId, houseID, value){
             
             return constructMessage('HouseHub', 'setActuatorValue', arguments);
@@ -250,8 +249,7 @@ function HubsAPI(url, serverTimeout, wsClientClass, PromiseClass) {
     this.UserHub = {};
     this.UserHub.server = {
         __HUB_NAME : 'UserHub',
-
-        /** @return {Promise}*/
+        
         subscribeToHub : function (){
             
             return constructMessage('UserHub', 'subscribeToHub', arguments);

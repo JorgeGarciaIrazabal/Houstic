@@ -8,17 +8,18 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     watch = require('gulp-watch'),
-    del = require('del');
+    del = require('del'),
+    exec = require('child_process').exec;
 
 
-var IONIC_DIR = "node_modules/ionic-angular/"
+var IONIC_DIR = "node_modules/ionic-angular/";
 
 
 /******************************************************************************
  * watch
  * Build the app and watch for source file changes.
  ******************************************************************************/
-gulp.task('watch', ['sass', 'copy.fonts', 'copy.html'], function(done) {
+gulp.task('watch', ['sass', 'copy.fonts', 'copy.html', 'copy.libs'], function(done) {
   watch('www/app/**/*.scss', function(){
     gulp.start('sass');
   });
@@ -37,6 +38,13 @@ gulp.task('build', ['sass', 'copy.fonts', 'copy.html'], function(done) {
   bundle(false, done);
 });
 
+gulp.task('serve', ['copy.libs', 'ionic.serve'], function(done) {
+    bundle(false, done);
+});
+
+gulp.task('default', ['serve'], function(done) {
+    bundle(false, done);
+});
 
 /******************************************************************************
  * sass
@@ -108,6 +116,15 @@ gulp.task('clean', function(done) {
   del(['www/build'], done);
 });
 
+gulp.task('ionic.serve', function (done) {
+    exec('ionic serve', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        done(err);
+    });
+});
+
+
 
 /******************************************************************************
  * Bundle
@@ -126,7 +143,7 @@ function bundle(watch, cb) {
     'modules': false,
     'chunks': false,
     'exclude': ['node_modules']
-  }
+  };
 
   var compiler = webpack(config);
   if (watch) {
