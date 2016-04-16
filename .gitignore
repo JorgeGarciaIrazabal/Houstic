@@ -67,3 +67,5 @@ target/
 **/config*.json
 
 *.properties
+
+**/test-reports/
