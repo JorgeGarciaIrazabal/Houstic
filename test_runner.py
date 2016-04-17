@@ -30,7 +30,6 @@ def __get_suites():
     return [unittest.defaultTestLoader.loadTestsFromName(test_file) for test_file in module_strings]
 
 
-
 def __runTests(suite):
     runner = xmlrunner.XMLTestRunner(output='test-reports')
     runner.run(suite)

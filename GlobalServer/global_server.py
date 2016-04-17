@@ -1,6 +1,8 @@
 import sys
 import os
 
+import hubs
+
 sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
 
 import json
@@ -8,16 +10,15 @@ import logging.config
 
 from mongoengine import connect
 from tornado import web, ioloop
-from wshubsapi import Asynchronous
-from wshubsapi.HubsInspector import HubsInspector
-
-import Hubs
-from Hubs.HouseHub import HouseHub
-from libs.WSHandler import WSHandler
-from libs.Config import Config
+from wshubsapi import asynchronous
+from wshubsapi.hubs_inspector import HubsInspector
+import hubs
+from hubs.house_hub import HouseHub
+from libs.ws_handler import WSHandler
+from libs.config import Config
 import utils
 
-os.chdir(utils.getModulePath())
+os.chdir(utils.get_module_path())
 
 logging.config.dictConfig(json.load(open('logging.json')))
 log = logging.getLogger(__name__)
@@ -29,22 +30,22 @@ app = web.Application([
 ], **settings)
 
 
-@Asynchronous.asynchronous()
-def __askAction():
+@asynchronous.asynchronous()
+def __ask_action():
     while True:
         text = raw_input("introduce value: ")
-        houseHub = HubsInspector.getHubInstance(HouseHub)
-        houseHub.setActuatorValue("Caldera", 1 if text == "1" else 0)
+        house_hub = HubsInspector.get_hub_instance(HouseHub)
+        house_hub.set_actuator_value("Caldera", 1 if text == "1" else 0)
 
 
 if __name__ == '__main__':
     connect(**Config.get().mongo)
-    Hubs.importAllHubs()
-    HubsInspector.inspectImplementedHubs()
-    HubsInspector.constructJSFile(Config.get().JSClientPath)
-    HubsInspector.constructPythonFile(Config.get().PyClientPath)
+    hubs.import_all_hubs()
+    HubsInspector.inspect_implemented_hubs()
+    HubsInspector.construct_js_file(Config.get().js_client_path)
+    HubsInspector.construct_python_file(Config.get().py_client_path)
     log.debug("starting...")
     app.listen(Config.get().port)
-    __askAction()
+    __ask_action()
 
     ioloop.IOLoop.instance().start()

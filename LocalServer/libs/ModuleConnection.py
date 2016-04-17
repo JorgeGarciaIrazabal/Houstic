@@ -1,9 +1,9 @@
 import SocketServer
 import logging
 from _socket import error
+from concurrent.futures import Future
 
-from concurrent.futures._base import Future
-from wshubsapi.utils import MessageSeparator
+from wshubsapi.message_separator import MessageSeparator
 
 
 class ModuleConnection(SocketServer.BaseRequestHandler):
@@ -20,11 +20,11 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
         self.future = None
         self.ID = None
 
-    def __handleCorrectDataReceived(self, data):
+    def __handle_correct_data_received(self, data):
         try:
             for m in self.__messageSeparator.addData(data):
                 h, b = m.split(self.headerSeparator)
-                self.onMessage(h, b, self)
+                self.on_message(h, b, self)
         except:
             self.log.exception(u"error receiving data with message: {}".format(data))
 
@@ -34,13 +34,13 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
         self.headerSeparator = "&&"
         self.future = Future()
         self.ID = None
-        ModuleConnection.onOpen(self)
+        ModuleConnection.on_open(self)
 
-    def writeMessage(self, message):
+    def write_message(self, message):
         """
         :return: Future
         """
-        self.request.sendall(message + self.__messageSeparator.sep)
+        self.request.sendall(message + self.__messageSeparator.separator)
         self.future = Future()
         return self.future
 
@@ -53,21 +53,21 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
                 self.log.debug("received: {}".format(data))
             except error as e:
                 if e.errno == 10054:
-                    self.onClose(self)
+                    self.on_close(self)
                     break
                 else:
                     raise
             except:
                 self.log.exception("error receiving data")
             else:
-                self.__handleCorrectDataReceived(data)
+                self.__handle_correct_data_received(data)
 
     @staticmethod
-    def onOpen(handler):
+    def on_open(handler):
         pass
 
     @staticmethod
-    def onMessage(header, body, handler):
+    def on_message(header, body, handler):
         if header == "RESULT":
             if body == "SUCCESS":
                 handler.future.set_result(True)
@@ -84,7 +84,7 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
             #  realPin? this might be responsibility of the module
 
     @staticmethod
-    def onClose(handler):
+    def on_close(handler):
         pass
 
 
@@ -92,5 +92,5 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 
-def createSocketServer(host, port, SocketHandlerClass=ModuleConnection):
-    return ThreadedTCPServer((host, port), SocketHandlerClass)
+def create_socket_server(host, port, socket_handler_class=ModuleConnection):
+    return ThreadedTCPServer((host, port), socket_handler_class)

@@ -10,13 +10,10 @@ import utils
 from libs.Config import Config
 from libs.House import House
 
-os.chdir(utils.getModulePath())
+os.chdir(utils.get_module_path())
 
 logging.config.dictConfig(json.load(open('logging.json')))
 
-
 if __name__ == '__main__':
-    Config.initConfig()
-    House().initializeCommunications()
-
-
+    Config.get().init_config()
+    House().initialize_communications()

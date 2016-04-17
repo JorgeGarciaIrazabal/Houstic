@@ -1,5 +1,5 @@
 import utils
-from ConfigBase import ConfigBase
+from config_base import ConfigBase
 
 
 class ConfigException(Exception):
@@ -7,27 +7,22 @@ class ConfigException(Exception):
 
 
 class Config(ConfigBase):
-
-
     def __init__(self):
-        self.houseIP = "" # all available interfaces
-        self.housePort = 7159
-        self.globalReconnectTimeout = 1
-        self.globalIP = "198.100.155.30" # OVH IP
-        self.globalPort = 9517
+        self.house_ip = ""  # all available interfaces
+        self.house_port = 7159
+        self.global_reconnect_timeout = 1
+        self.global_ip = "198.100.155.30"  # OVH IP
+        self.global_port = 9517
         super(Config, self).__init__()
 
-    def initConfig(self):
-        self.readConfigFile()
-        if self.houseIP is None:
-            self.houseIP = utils.getLocalIp()
-        self.logConfigValues()
+    def init_config(self):
+        self.read_config_file()
+        if self.house_ip is None:
+            self.house_ip = utils.get_local_ip()
+        self.log_config_values()
 
+    def get_global_ws_url(self, ID):
+        return "ws://{0}:{1}/{2}".format(self.global_ip, self.global_port, ID)
 
-    def getGlobalWsURL(self, ID):
-        return "ws://{0}:{1}/{2}".format(self.globalIP, self.globalPort, ID)
-
-    def _ignoreAttributes(self):
-        return super(Config, self)._ignoreAttributes() + ["getGlobalWsURL"]
-
-
+    def _ignore_attributes(self):
+        return super(Config, self)._ignore_attributes() + ["get_global_ws_url"]

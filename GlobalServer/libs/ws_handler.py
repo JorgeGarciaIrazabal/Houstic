@@ -1,26 +1,26 @@
 import logging
 
-from wshubsapi.ConnectionHandlers.Tornado import ConnectionHandler
-from wshubsapi.ConnectedClient import ConnectedClient
+from wshubsapi.connection_handlers.tornado_handler import ConnectionHandler
+from wshubsapi.connected_client import ConnectedClient
 
 
 class HousticClient(ConnectedClient):
     HOUSE, MOBILE = range(2)
-    def __init__(self, commEnvironment, writeMessageFunction):
-        super(HousticClient, self).__init__(commEnvironment, writeMessageFunction)
+
+    def __init__(self, comm_environment, write_msg_function):
+        super(HousticClient, self).__init__(comm_environment, write_msg_function)
         self.device = None
 
 
 class WSHandler(ConnectionHandler):
-
     log = logging.getLogger(__name__)
 
     def __init__(self, application, request, **kwargs):
         super(WSHandler, self).__init__(application, request, **kwargs)
-        self._connectedClient = HousticClient(self.commEnvironment, self.writeMessage)
+        self._connected_client = HousticClient(self.comm_environment, self.write_message)
         """:type: HousticClient"""
 
-    def open(self, device, ID=None, *args):
+    def open(self, device, id_=None, *args):
         try:
             device = int(device)
             if device not in (HousticClient.HOUSE, HousticClient.MOBILE):
@@ -28,8 +28,8 @@ class WSHandler(ConnectionHandler):
         except Exception as e:
             self.close(1, str(e))
             raise
-        clientId = ID
-        self._connectedClient.device = device
+        client_id = id_
+        self._connected_client.device = device
 
-        ID = self.commEnvironment.onOpen(self._connectedClient, clientId)
-        self.log.debug("open new connection with ID: {} ".format(ID))
+        id_ = self.comm_environment.on_opened(self._connected_client, client_id)
+        self.log.debug("open new connection with ID: {} ".format(id_))
