@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<title>MicroPython WebREPL</title>
+<!--
+  term.js
+  Copyright (c) 2012-2013, Christopher Jeffrey (MIT License)
+  Copyright (c) 2016, Paul Sokolovsky
+-->
+<style>
+  html {
+    background: #555;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    font: 20px/1.5 sans-serif;
+  }
+
+/*
+  .terminal {
+    float: left;
+    border: #000 solid 5px;
+    font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+    font-size: 11px;
+    color: #f0f0f0;
+    background: #000;
+  }
+
+  .terminal-cursor {
+    color: #000;
+    background: #f0f0f0;
+  }
+*/
+</style>
+<script src="term.js"></script>
+</head>
+<body>
+<form>
+<input type="text" name="webrepl_url" id="url" value="ws://192.168.4.1:8266/" />
+<input type="submit" id="button" value="Connect" onclick="button_click(); return false;" />
+</form>
+<div id="term">
+</div>
+<br clear="both" />
+<i>Terminal widget should be focused (text cursor visible) to accept input. Click on it if not.</i><br/>
+<i>To paste, press Ctrl+A, then Ctrl+V</i>
+</body>
+
+<script>
+;
+
+var term;
+var ws;
+var connected = false;
+
+(function() {
+    window.onload = function() {
+      term = new Terminal({
+        cols: 80,
+        rows: 24,
+        useStyle: true,
+        screenKeys: true,
+        cursorBlink: false
+      });
+      term.open(document.getElementById("term"));
+    }
+}).call(this);
+
+function button_click() {
+    if (connected) {
+        ws.close();
+    } else {
+        document.getElementById('url').disabled = true;
+        document.getElementById('button').value = "Disconnect";
+        connected = true;
+        connect(document.getElementById('url').value);
+    }
+}
+
+function prepare_for_connect() {
+    document.getElementById('url').disabled = false;
+    document.getElementById('button').value = "Connect";
+}
+
+function connect(url) {
+    ws = new WebSocket(url);
+    ws.onopen = function() {
+        term.removeAllListeners('data');
+        term.on('data', function(data) {
+            // Pasted data from clipboard will likely contain
+            // LF as EOL chars.
+            data = data.replace(/\n/g, "\r");
+            ws.send(data);
+        });
+
+        term.on('title', function(title) {
+            document.title = title;
+        });
+
+        term.focus();
+        term.element.focus();
+        term.write('\x1b[31mWelcome to MicroPython!\x1b[m\r\n');
+
+        ws.onmessage = function(event) {
+            term.write(event.data);
+        };
+    };
+
+    ws.onclose = function() {
+        connected = false;
+        if (term) {
+            term.write('\x1b[31mDisconnected\x1b[m\r\n');
+        }
+        prepare_for_connect();
+    }
+}
+</script>
+
+</html>

@@ -45,8 +45,8 @@ class ConfigBase(object):
                 self.__dict__.update(json_object)
             except ValueError:
                 self._log.error("Json corrupted so it was ignored, necessary to check!")
-        else:
-            self.store_config_in_file()
+                return  # we don't want to overwrite corrupted files in order to not lose all configuration
+        self.store_config_in_file()
 
     def store_config_in_file(self):
         with open(self._config_file_path, "w") as f:
