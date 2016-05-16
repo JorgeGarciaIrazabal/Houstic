@@ -16,7 +16,7 @@ def get_module_path(frame=None):
     frame = frame if frame is not None else inspect.currentframe().f_back
     info = inspect.getframeinfo(frame)
     file_name = info.filename
-    return os.path.dirname(os.path.abspath(unicode(file_name, encoding)))
+    return os.path.dirname(os.path.abspath(file_name))
 
 
 def set_program_path(path):
