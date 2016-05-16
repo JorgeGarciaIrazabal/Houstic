@@ -1,4 +1,6 @@
 import os
+
+
 def read(pin, times):
     return (pin.read() for i in range(times))
 
