@@ -1,0 +1,9 @@
+{
+    "components": [
+        {
+            "pin": 1,
+            "mode": 0,
+            "name": "temperature"
+        }
+    ]
+}
