@@ -22,7 +22,8 @@ class ModuleConnection(socketserver.BaseRequestHandler):
         """:type : MessageSeparator"""
         self.future = None
         """:type : Future"""
-        self.id_ = None
+        self.id = None
+        self.type = None
 
     def __handle_correct_data_received(self, data):
         try:
@@ -36,8 +37,7 @@ class ModuleConnection(socketserver.BaseRequestHandler):
         self.log.debug("Connection started in client address: {}".format(self.client_address))
         self._message_separator = MessageSeparator(separator="~")
         self.future = Future()
-        self.id_ = None
-        ModuleConnection.on_open(self)
+        self.id = None
 
     def call_in_module(self, function_name, *args) -> Future:
         msg = dict(function=function_name, args=args)
@@ -72,11 +72,15 @@ class ModuleConnection(socketserver.BaseRequestHandler):
     def on_open(handler):
         pass
 
-    def on_message(self, message):
-        if message['success']:
-            self.future.set_result(message["reply"])
+    def on_message(self, msg_obj):
+        if "handshake" in msg_obj:
+            self.type = msg_obj['type']
+            self.id = msg_obj['id']
+            ModuleConnection.on_open(self)
+        elif msg_obj['success']:
+            self.future.set_result(msg_obj["reply"])
         else:
-            self.future.set_exception(Exception(message["reply"]))
+            self.future.set_exception(Exception(msg_obj["reply"]))
 
     @staticmethod
     def on_close(handler):

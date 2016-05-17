@@ -21,8 +21,8 @@ class Config(ConfigBase):
             self.house_ip = utils.get_local_ip()
         self.log_config_values()
 
-    def get_global_ws_url(self, ID):
-        return "ws://{0}:{1}/{2}".format(self.global_ip, self.global_port, ID)
+    def get_global_ws_url(self, id_):
+        return "ws://{0}:{1}/{2}".format(self.global_ip, self.global_port, id_)
 
     def _ignore_attributes(self):
         return super(Config, self)._ignore_attributes() + ["get_global_ws_url"]

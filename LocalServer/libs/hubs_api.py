@@ -114,8 +114,8 @@ class HubsAPI(object):
         self.serialization_args = dict(max_depth=serialization_max_depth, max_iter=serialization_max_iter)
         self.serialization_args['unpicklable'] = True
         self.UtilsAPIHub = self.__UtilsAPIHub(self.ws_client, self.serialization_args)
-        self.UserHub = self.__UserHub(self.ws_client, self.serialization_args)
         self.HouseHub = self.__HouseHub(self.ws_client, self.serialization_args)
+        self.UserHub = self.__UserHub(self.ws_client, self.serialization_args)
 
     @property
     def default_on_error(self):
@@ -237,6 +237,103 @@ class HubsAPI(object):
                     return send_return_obj
                 return future
 
+    class __HouseHub(object):
+        def __init__(self, ws_client, serialization_args):
+            hub_name = self.__class__.__name__[2:]
+            self.server = self.__Server(ws_client, hub_name, serialization_args)
+            self.client = WSSimpleObject()
+
+        class __Server(GenericServer):
+            
+            def component_read(self, house_id, module_id, component_key):
+                """
+                :rtype : Future
+                """
+                args = list()
+                args.append(house_id)
+                args.append(module_id)
+                args.append(component_key)
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "component_read", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+        
+            def component_write(self, house_id, module_id, component_key, value):
+                """
+                :rtype : Future
+                """
+                args = list()
+                args.append(house_id)
+                args.append(module_id)
+                args.append(component_key)
+                args.append(value)
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "component_write", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+        
+            def get_all_components(self, house_id):
+                """
+                :rtype : Future
+                """
+                args = list()
+                args.append(house_id)
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "get_all_components", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+        
+            def get_subscribed_clients_to_hub(self, ):
+                """
+                :rtype : Future
+                """
+                args = list()
+                
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "get_subscribed_clients_to_hub", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+        
+            def subscribe_to_hub(self, ):
+                """
+                :rtype : Future
+                """
+                args = list()
+                
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "subscribe_to_hub", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+        
+            def unsubscribe_from_hub(self, ):
+                """
+                :rtype : Future
+                """
+                args = list()
+                
+                id_ = self._get_next_message_id()
+                body = {"hub": self.hub_name, "function": "unsubscribe_from_hub", "args": args, "ID": id_}
+                future = self.ws_client.get_future(id_)
+                send_return_obj = self.ws_client.send(self._serialize_object(body))
+                if isinstance(send_return_obj, Future):
+                    return send_return_obj
+                return future
+
     class __UserHub(object):
         def __init__(self, ws_client, serialization_args):
             hub_name = self.__class__.__name__[2:]
@@ -323,100 +420,6 @@ class HubsAPI(object):
                 args.append(house_id)
                 id_ = self._get_next_message_id()
                 body = {"hub": self.hub_name, "function": "remove_house", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-        
-            def subscribe_to_hub(self, ):
-                """
-                :rtype : Future
-                """
-                args = list()
-                
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "subscribe_to_hub", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-        
-            def unsubscribe_from_hub(self, ):
-                """
-                :rtype : Future
-                """
-                args = list()
-                
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "unsubscribe_from_hub", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-
-    class __HouseHub(object):
-        def __init__(self, ws_client, serialization_args):
-            hub_name = self.__class__.__name__[2:]
-            self.server = self.__Server(ws_client, hub_name, serialization_args)
-            self.client = WSSimpleObject()
-
-        class __Server(GenericServer):
-            
-            def get_all_components(self, house_id):
-                """
-                :rtype : Future
-                """
-                args = list()
-                args.append(house_id)
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "get_all_components", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-        
-            def get_sensor_value(self, component_id):
-                """
-                :rtype : Future
-                """
-                args = list()
-                args.append(component_id)
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "get_sensor_value", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-        
-            def get_subscribed_clients_to_hub(self, ):
-                """
-                :rtype : Future
-                """
-                args = list()
-                
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "get_subscribed_clients_to_hub", "args": args, "ID": id_}
-                future = self.ws_client.get_future(id_)
-                send_return_obj = self.ws_client.send(self._serialize_object(body))
-                if isinstance(send_return_obj, Future):
-                    return send_return_obj
-                return future
-        
-            def set_actuator_value(self, component_id, house_id, value):
-                """
-                :rtype : Future
-                """
-                args = list()
-                args.append(component_id)
-                args.append(house_id)
-                args.append(value)
-                id_ = self._get_next_message_id()
-                body = {"hub": self.hub_name, "function": "set_actuator_value", "args": args, "ID": id_}
                 future = self.ws_client.get_future(id_)
                 send_return_obj = self.ws_client.send(self._serialize_object(body))
                 if isinstance(send_return_obj, Future):

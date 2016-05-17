@@ -1,13 +1,11 @@
 import sys
 import os
 
-import hubs
-
 sys.path += [os.path.join(os.path.dirname(__file__), os.pardir, "PythonUtils")]
 
+import hubs
 import json
 import logging.config
-
 from mongoengine import connect
 from tornado import web, ioloop
 from wshubsapi import asynchronous
@@ -33,10 +31,15 @@ app = web.Application([
 @asynchronous.asynchronous()
 def __ask_action():
     while True:
-        text = input("introduce value: ")
+        option = input("introduce value: ")
         house_hub = HubsInspector.get_hub_instance(HouseHub)
         try:
-            house_hub.get_all_components(0)
+            if option == "0":
+                house_hub.component_write(0, '12353AF234', "green", 1)
+            elif option == "1":
+                house_hub.component_read(0, '12353AF234', 'light')
+            else:
+                house_hub.get_all_components(0)
         except:
             log.exception("error")
 

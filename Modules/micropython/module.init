@@ -1,9 +1,24 @@
 {
-    "components": [
-        {
+    "components": {
+        "green": {
             "pin": 12,
-            "mode": 0,
-            "name": "temperature"
+            "mode": 1
+        },
+        "blue": {
+            "pin": 13,
+            "mode": 1
+        },
+        "red": {
+            "pin": 14,
+            "mode": 1
+        },
+        "button": {
+            "pin": 4,
+            "mode": 0
+        },
+        "light": {
+            "pin": 0,
+            "mode": 2
         }
-    ]
+    }
 }

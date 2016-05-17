@@ -1,8 +1,6 @@
 import logging
 import time
-
 from wshubsapi import asynchronous
-
 from libs.module_connection import create_socket_server, ModuleConnection
 from libs.hubs_api import HubsAPI
 from libs.config import Config
@@ -16,18 +14,19 @@ class House:
         """:type : HubsAPI """
         # self.componentCommunicationManager
         self.house_server = create_socket_server(Config.get().house_ip, Config.get().house_port)
-        self.module_connections = []
-        """:type : list of ModuleConnection"""
+        self.module_connections = dict()
+        """:type : 	Dict from str to ModuleConnection"""
         ModuleConnection.on_open = self.on_module_connected
         ModuleConnection.on_close = self.on_module_closed
 
-    def on_module_connected(self, handler):
-        self.module_connections.append(handler)
+    def on_module_connected(self, handler: ModuleConnection):
+        self.module_connections[handler.id] = handler
         self.log.debug("module connected")
 
     def on_module_closed(self, handler):
         self.log.debug("module closed")
-        self.module_connections.remove(handler)
+        if handler.id in self.module_connections:
+            self.module_connections.pop(handler.id)
 
     @asynchronous.asynchronous()
     def __auto_reconnect_global_server_api(self, *args):
@@ -54,22 +53,20 @@ class House:
         self.house_server.serve_forever()
 
     def construct_client_api(self):
-        def __get_module_connection(component_id):
-            try:
-                # todo: find module form componentId, m.ID should not be componentID
-                return next(m for m in self.module_connections if m.ID == component_id)
-            except StopIteration:
-                raise Exception("Unable to find component with ID: {}".format(component_id))
-
         def get_components():
-            return self.module_connections[0].call_in_module("get_components").result()
+            modules = dict()
+            for id_, module in self.module_connections.items():
+                # todo: do this in parallel
+                modules[id_] = module.call_in_module("get_components").result()
+            return modules
 
-        def component_write(component_id, value):
-            module = __get_module_connection(component_id)
-            print(module.write_message("W-12-" + str(value)).result())  # mode-pin-value
+        def component_write(module_id, component_key, value):
+            module = self.module_connections[module_id]
+            return module.call_in_module("component_write",component_key, value).result()
 
-        def component_read(component_id):
-            return None  # create future when receiving value of sensor
+        def component_read(module_id, component_id):
+            module = self.module_connections[module_id]
+            return module.call_in_module("component_read", component_id).result()
 
         self.global_server_api.HouseHub.client.get_components = get_components
         self.global_server_api.HouseHub.client.component_write = component_write

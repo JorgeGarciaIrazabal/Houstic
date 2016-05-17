@@ -3,11 +3,11 @@ import json
 
 
 class Component:
-    def __init__(self, pin, mode, name):
+    def __init__(self, key, pin, mode):
         self.pin_num = pin
         self.mode = mode
         self.pin = machine.Pin(pin, mode)
-        self.name = name
+        self.key = key
 
 
 class Api:
@@ -22,8 +22,8 @@ class Api:
     def read_config(self):
         with open("module.init") as f:
             data = json.loads(f.read())
-            for component in data["components"]:
-                self.components[component["name"]] = Component(**component)
+            for key, data in data["components"].items():
+                self.components[key] = Component(key, **data)
 
     def get_components(self):
         components_dict = dict()
@@ -31,4 +31,12 @@ class Api:
             components_dict[key] = dict(pin=component.pin_num, mode=component.mode)
         return json.dumps(components_dict)
 
+    def component_write(self, key, value):
+        component = self.components[key]
+        component.pin.value(value)
+        return True
+
+    def component_read(self, key):
+        component = self.components[key]
+        return component.pin.value()
 

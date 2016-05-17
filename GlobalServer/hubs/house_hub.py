@@ -8,20 +8,10 @@ class HouseHub(MiddleWareHub):
         components = house.get_components().result()
         return components
 
-    def get_sensor_value(self, component_id):
-        # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)
-        # futures = house.getValueFromSensor(sensorID)
-        # return futures[0].result()
-        return 0
+    def component_write(self, house_id, module_id, component_key, value):
+        house = self.clients.get_all_clients()[0]  # todo: use house_id
+        return house.component_write(module_id, component_key, value).result()
 
-    def set_actuator_value(self, component_id, house_id, value):
-        # house = self._getClientsHolder().getClient(lambda x: x.ID = houseID)
-        # futures = house.getValueFromSensor(sensorID)
-        # return futures[0].result()
-        house = self.clients.getClient(house_id)
-        answer = house.componentWrite(component_id, value).result()
-        return answer
-
-    def __get_house_connection(self, component_id):
-        # self._getClientsHolder().getClient(lambda x: x.ID = houseID) ...
-        return 0
+    def component_read(self, house_id, module_id, component_key):
+        house = self.clients.get_all_clients()[0]  # todo: use house_id
+        return house.component_read(module_id, component_key).result()

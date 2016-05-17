@@ -61,7 +61,7 @@ class ADC:
 
 
 class Pin:
-    IN, OUT, PULL_UP, PULL_DOWN, OUT_PP, IRQ_FALLING= range(5)
+    IN, OUT, PULL_UP, PULL_DOWN, OUT_PP, IRQ_FALLING = range(6)
 
     def __init__(self, pin: int, mode=IN, value=None):
         self.value(value)
@@ -74,7 +74,7 @@ class Pin:
     def low(self):
         return
 
-    def value(self, value= None):
+    def value(self, value=None):
         if value is None:
             return 1
         if value == 0:

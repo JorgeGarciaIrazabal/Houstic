@@ -17,10 +17,12 @@ class MessageSeparator:
 
 
 class Communication:
-    def __init__(self, api):
+    def __init__(self, api, id_, type_):
         self.socket = None
         self.message_separator = MessageSeparator("~")
         self.api = api
+        self.type = type_
+        self.id = id_
 
     def _handle_message(self, msg):
         msg_obj = dict(success=True, reply="")
@@ -31,10 +33,15 @@ class Communication:
             msg_obj['success'] = False
         self.write_message(json.dumps(msg_obj))
 
+    def _send_handshake(self):
+        handshake = dict(handshake=True, id=self.id, type=self.type)
+        self.write_message(json.dumps(handshake))
+
     def connect_to_server(self, ip, port):
         address = socket.getaddrinfo(ip, port)[0][-1]
         self.socket = socket.socket()
         self.socket.connect(address)
+        self._send_handshake()
         print("connected")
 
     def write_message(self, message):
