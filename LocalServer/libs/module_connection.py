@@ -1,46 +1,52 @@
-import SocketServer
+try:
+    import SocketServer as socketserver
+except ImportError:
+    import socketserver
 import logging
 from _socket import error
 from concurrent.futures import Future
+import json
 
 from wshubsapi.message_separator import MessageSeparator
 
 
-class ModuleConnection(SocketServer.BaseRequestHandler):
+class ModuleConnection(socketserver.BaseRequestHandler):
     log = logging.getLogger(__name__)
     log.addHandler(logging.NullHandler())
 
     def __init__(self, request, client_address, server):
-        SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
+        super().__init__(request, client_address, server)
         # never enter here :O
-        self.messageBuffer = ""
-        self.__messageSeparator = None
+        self.message_buffer = ""
+        self._message_separator = None
         """:type : MessageSeparator"""
-        self.headerSeparator = None
         self.future = None
-        self.ID = None
+        """:type : Future"""
+        self.id_ = None
 
     def __handle_correct_data_received(self, data):
         try:
-            for m in self.__messageSeparator.addData(data):
-                h, b = m.split(self.headerSeparator)
-                self.on_message(h, b, self)
-        except:
+            for message in self._message_separator.add_data(data):
+                self.on_message(json.loads(message))
+        except Exception as e:
+            self.future.set_exception(e)
             self.log.exception(u"error receiving data with message: {}".format(data))
 
     def setup(self):
         self.log.debug("Connection started in client address: {}".format(self.client_address))
-        self.__messageSeparator = MessageSeparator(messageSeparator="~")
-        self.headerSeparator = "&&"
+        self._message_separator = MessageSeparator(separator="~")
         self.future = Future()
-        self.ID = None
+        self.id_ = None
         ModuleConnection.on_open(self)
 
-    def write_message(self, message):
-        """
-        :return: Future
-        """
-        self.request.sendall(message + self.__messageSeparator.separator)
+    def call_in_module(self, function_name, *args) -> Future:
+        msg = dict(function=function_name, args=args)
+        self.request.sendall(bytes(json.dumps(msg) + self._message_separator.separator, 'utf-8'))
+        self.future = Future()
+        return self.future
+
+    def write_message(self, message) -> Future:
+        self.request.sendall(message + self._message_separator.separator)
         self.future = Future()
         return self.future
 
@@ -66,29 +72,18 @@ class ModuleConnection(SocketServer.BaseRequestHandler):
     def on_open(handler):
         pass
 
-    @staticmethod
-    def on_message(header, body, handler):
-        if header == "RESULT":
-            if body == "SUCCESS":
-                handler.future.set_result(True)
-            else:
-                handler.future.set_exception(Exception("Error setting executing action"))
-        elif header == "ID":
-            handler.ID = body
-            # todo: we need to extend this hello message receiving:
-            # - moduleID
-            # components list with:
-            #  digital/analog
-            #  input/output
-            #  componentID
-            #  realPin? this might be responsibility of the module
+    def on_message(self, message):
+        if message['success']:
+            self.future.set_result(message["reply"])
+        else:
+            self.future.set_exception(Exception(message["reply"]))
 
     @staticmethod
     def on_close(handler):
         pass
 
 
-class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 

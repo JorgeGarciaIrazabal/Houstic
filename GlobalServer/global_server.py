@@ -33,9 +33,12 @@ app = web.Application([
 @asynchronous.asynchronous()
 def __ask_action():
     while True:
-        text = raw_input("introduce value: ")
+        text = input("introduce value: ")
         house_hub = HubsInspector.get_hub_instance(HouseHub)
-        house_hub.set_actuator_value("Caldera", 1 if text == "1" else 0)
+        try:
+            house_hub.get_all_components(0)
+        except:
+            log.exception("error")
 
 
 if __name__ == '__main__':

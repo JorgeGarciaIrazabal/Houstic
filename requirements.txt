@@ -4,3 +4,4 @@ tornado
 mongoengine
 xmlrunner
 flexmock
+ws4py

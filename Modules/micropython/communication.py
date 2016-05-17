@@ -1,4 +1,5 @@
 import socket
+import json
 
 
 class MessageSeparator:
@@ -9,26 +10,35 @@ class MessageSeparator:
         self.separator = separator
 
     def parse_data(self, data):
-        data = self.buffer + data
+        data = self.buffer + data.decode('utf-8')
         messages = data.split(self.separator)
         self.buffer = messages.pop(-1)
         return messages
 
 
-
 class Communication:
-    def __init__(self):
+    def __init__(self, api):
         self.socket = None
-        self.message_separator = MessageSeparator()
-        self.api = None
+        self.message_separator = MessageSeparator("~")
+        self.api = api
+
+    def _handle_message(self, msg):
+        msg_obj = dict(success=True, reply="")
+        try:
+            msg_obj['reply'] = self.api.handle(msg)
+        except Exception as e:
+            msg_obj['reply'] = str(e)
+            msg_obj['success'] = False
+        self.write_message(json.dumps(msg_obj))
 
     def connect_to_server(self, ip, port):
         address = socket.getaddrinfo(ip, port)[0][-1]
         self.socket = socket.socket()
         self.socket.connect(address)
+        print("connected")
 
     def write_message(self, message):
-        self.socket.send(bytes(message, 'utf-8'))
+        self.socket.send(bytes(message + self.message_separator.separator, 'utf-8'))
 
     def main_loop(self):
         while True:
@@ -36,7 +46,7 @@ class Communication:
             if data:
                 messages = self.message_separator.parse_data(data)
                 for message in messages:
-                    self.api.handle(message)
+                    self._handle_message(message)
                 print(str(data, 'utf8'), end='')
             else:
                 break

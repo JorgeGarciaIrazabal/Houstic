@@ -1,7 +1,7 @@
 {
     "components": [
         {
-            "pin": 1,
+            "pin": 12,
             "mode": 0,
             "name": "temperature"
         }

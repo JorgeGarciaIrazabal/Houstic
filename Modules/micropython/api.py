@@ -15,12 +15,12 @@ class Api:
         self.components = dict()
 
     def handle(self, message):
-        msg_obj = json.loads(message)
+        msg_obj = json.loads(str(message))
         function = getattr(self, msg_obj['function'])
-        function(*msg_obj["params"])
+        return function(*msg_obj["args"])
 
     def read_config(self):
-        with open("config.json") as f:
+        with open("module.init") as f:
             data = json.loads(f.read())
             for component in data["components"]:
                 self.components[component["name"]] = Component(**component)

@@ -7,7 +7,7 @@ import json
 import logging.config
 
 import utils
-from libs.House import House
+from libs.house import House
 
 os.chdir(utils.get_module_path())
 
