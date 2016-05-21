@@ -1,6 +1,8 @@
 import socket
 import json
 
+from api import Api
+
 
 class MessageSeparator:
     DEFAULT_API_SEP = "*API_SEP*"
@@ -16,11 +18,13 @@ class MessageSeparator:
         return messages
 
 
-class Communication:
-    def __init__(self, api, id_, type_):
+class CommunicationHandler:
+    def __init__(self, id_, type_):
         self.socket = None
+        ''':type : socket.socket'''
         self.message_separator = MessageSeparator("~")
-        self.api = api
+        self.api = Api(self)
+        self.api.read_config()
         self.type = type_
         self.id = id_
 
@@ -39,6 +43,7 @@ class Communication:
 
     def connect_to_server(self, ip, port):
         address = socket.getaddrinfo(ip, port)[0][-1]
+        print("connecting to", address)
         self.socket = socket.socket()
         self.socket.connect(address)
         self._send_handshake()
@@ -46,6 +51,9 @@ class Communication:
 
     def write_message(self, message):
         self.socket.send(bytes(message + self.message_separator.separator, 'utf-8'))
+
+    def close_communication(self):
+        self.socket.close()
 
     def main_loop(self):
         while True:

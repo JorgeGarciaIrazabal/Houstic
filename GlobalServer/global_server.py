@@ -21,25 +21,28 @@ os.chdir(utils.get_module_path())
 logging.config.dictConfig(json.load(open('logging.json')))
 log = logging.getLogger(__name__)
 
-settings = {"static_path": os.path.join(os.path.dirname(__file__), "_static")}
-
-app = web.Application([
-    (r'/(.*)', WSHandler),
-], **settings)
+app = web.Application([(r'/(.*)', WSHandler)])
 
 
 @asynchronous.asynchronous()
 def __ask_action():
     while True:
         option = input("introduce value: ")
-        house_hub = HubsInspector.get_hub_instance(HouseHub)
+        house_hub = HouseHub.get_instance()
         try:
+            house_id = house_hub.list_houses()[0]
+            house = house_hub.get_all_components(0)
+            module_id = list(house.keys())[0]
             if option == "0":
-                house_hub.component_write(0, '12353AF234', "green", 1)
+                house_hub.component_write(house_id, module_id, "green", 1)
             elif option == "1":
-                house_hub.component_read(0, '12353AF234', 'light')
-            else:
-                house_hub.get_all_components(0)
+                house_hub.component_read(house_id, module_id, 'light')
+            elif option == "2":
+                house_hub.get_all_components(house_id)
+            elif option == "reset":
+                house_hub.reset_module(house_id, module_id)
+            elif option == "comm":
+                house_hub.stop_module_communication(house_id, module_id)
         except:
             log.exception("error")
 

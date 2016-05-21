@@ -11,8 +11,9 @@ class Component:
 
 
 class Api:
-    def __init__(self):
+    def __init__(self, communication_handler):
         self.components = dict()
+        self.communication_handler = communication_handler
 
     def handle(self, message):
         msg_obj = json.loads(str(message))
@@ -40,3 +41,8 @@ class Api:
         component = self.components[key]
         return component.pin.value()
 
+    def reset(self):
+        machine.reset()
+
+    def stop_communication(self):
+        self.communication_handler.close_communication()

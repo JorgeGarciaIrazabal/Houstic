@@ -3,7 +3,7 @@
   "disable_existing_loggers": false,
   "formatters": {
     "simple": {
-      "format": "%(asctime)s - %(levelname)s - %(message)s",
+      "format": "%(asctime)s  File \"%(pathname)s\", line %(lineno)d\n%(levelname)s - %(message)s",
       "datefmt": "%Y/%m/%d %H:%M:%S"
     }
   },

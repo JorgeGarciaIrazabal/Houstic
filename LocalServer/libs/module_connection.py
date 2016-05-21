@@ -54,7 +54,8 @@ class ModuleConnection(socketserver.BaseRequestHandler):
         while True:
             try:
                 data = self.request.recv(10240)
-                if data == "":
+                if data == "" or data == b'':
+                    self.log.warning("connection closed")
                     return
                 self.log.debug("received: {}".format(data))
             except error as e:

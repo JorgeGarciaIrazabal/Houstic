@@ -62,12 +62,22 @@ class House:
 
         def component_write(module_id, component_key, value):
             module = self.module_connections[module_id]
-            return module.call_in_module("component_write",component_key, value).result()
+            return module.call_in_module("component_write", component_key, value).result()
 
         def component_read(module_id, component_id):
             module = self.module_connections[module_id]
             return module.call_in_module("component_read", component_id).result()
 
+        def reset_module(module_id):
+            module = self.module_connections[module_id]
+            return module.call_in_module("reset").result()
+
+        def stop_module_communication(module_id):
+            module = self.module_connections[module_id]
+            return module.call_in_module("stop_communication").result()
+
         self.global_server_api.HouseHub.client.get_components = get_components
         self.global_server_api.HouseHub.client.component_write = component_write
         self.global_server_api.HouseHub.client.component_read = component_read
+        self.global_server_api.HouseHub.client.reset_module = reset_module
+        self.global_server_api.HouseHub.client.stop_module_communication = stop_module_communication
