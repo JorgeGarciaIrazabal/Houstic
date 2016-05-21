@@ -21,22 +21,27 @@ class House:
 
     def on_module_connected(self, handler: ModuleConnection):
         self.module_connections[handler.id] = handler
-        self.log.debug("module connected")
+        self.log.info("module connected")
 
     def on_module_closed(self, handler):
-        self.log.debug("module closed")
+        self.log.warning("module closed")
         if handler.id in self.module_connections:
             self.module_connections.pop(handler.id)
 
     @asynchronous.asynchronous()
     def __auto_reconnect_global_server_api(self, *args):
         try:
-            self.global_server_api = HubsAPI(Config.get().get_global_ws_url(1))
+            self.global_server_api = HubsAPI(Config.get().get_global_ws_url())
             self.construct_client_api()
             self.global_server_api.ws_client.closed = self.__auto_reconnect_global_server_api
             self.global_server_api.connect()
+            if Config.get().id is None:
+                self.log.info("asking for ID")
+                Config.get().id = self.global_server_api.HouseHub.server.create().result()
+                Config.get().store_config_in_file()
+                self.log.info("stored ID: {}".format(Config.get().id))
         except:
-            self.log.exception("unable to connect to global server")
+            self.log.error('Server connection lost')
             time.sleep(Config.get().global_reconnect_timeout)
             self.__auto_reconnect_global_server_api()
 

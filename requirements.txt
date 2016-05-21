@@ -1,4 +1,4 @@
-wshubsapi>=0.7.0
+wshubsapi>=0.7.7
 glob2
 tornado
 mongoengine
