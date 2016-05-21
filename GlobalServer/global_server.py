@@ -31,7 +31,9 @@ def __ask_action():
         house_hub = HouseHub.get_instance()
         try:
             house_id = house_hub.list_houses()[0]
+            log.info("received house_id: {}".format(house_id))
             house = house_hub.get_all_components(house_id)
+            log.info("received components: {}".format(house.items()))
             module_id = list(house.keys())[0]
             if option == "0":
                 house_hub.component_write(house_id, module_id, "green", 1)
