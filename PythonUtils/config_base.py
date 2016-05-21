@@ -58,6 +58,9 @@ class ConfigBase(object):
 
     @classmethod
     def get(cls):
+        """
+        :rtype: ConfigBase
+        """
         if cls.__instance is None:
             cls.__instance = cls()
         return cls.__instance

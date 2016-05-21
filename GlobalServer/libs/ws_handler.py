@@ -2,11 +2,10 @@ import logging
 
 from wshubsapi.connection_handlers.tornado_handler import ConnectionHandler
 from wshubsapi.connected_client import ConnectedClient
+from enums import ClientType
 
 
 class HousticClient(ConnectedClient):
-    HOUSE, MOBILE = range(2)
-
     def __init__(self, comm_environment, write_msg_function):
         super(HousticClient, self).__init__(comm_environment, write_msg_function)
         self.device = None
@@ -22,9 +21,7 @@ class WSHandler(ConnectionHandler):
 
     def open(self, device, id_=None, *args):
         try:
-            device = int(device)
-            if device not in (HousticClient.HOUSE, HousticClient.MOBILE):
-                raise Exception("Unable to identify device type: {}".format(device))
+            device = ClientType(int(device))
         except Exception as e:
             self.close(1, str(e))
             raise

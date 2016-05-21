@@ -21,7 +21,7 @@ os.chdir(utils.get_module_path())
 logging.config.dictConfig(json.load(open('logging.json')))
 log = logging.getLogger(__name__)
 
-app = web.Application([(r'/(.*)', WSHandler)])
+app = web.Application([(r'/(?P<device>[^\/]+)/?(?P<id_>[^\/]+)?', WSHandler)])
 
 
 @asynchronous.asynchronous()
@@ -31,7 +31,7 @@ def __ask_action():
         house_hub = HouseHub.get_instance()
         try:
             house_id = house_hub.list_houses()[0]
-            house = house_hub.get_all_components(0)
+            house = house_hub.get_all_components(house_id)
             module_id = list(house.keys())[0]
             if option == "0":
                 house_hub.component_write(house_id, module_id, "green", 1)

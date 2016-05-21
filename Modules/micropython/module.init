@@ -16,6 +16,10 @@
             "pin": 4,
             "mode": 0
         },
+        "boiler": {
+            "pin": 5,
+            "mode": 0
+        },
         "light": {
             "pin": 0,
             "mode": 2
