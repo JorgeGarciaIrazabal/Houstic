@@ -1,5 +1,4 @@
 from mongoengine import DoesNotExist
-
 from hubs.middle_ware_hub import MiddleWareHub
 from db.house_model import House
 from db.user_model import User

@@ -4,7 +4,6 @@ import {ButtonsGuide} from '../buttons-guide/buttons-guide';
 
 @Page({
     templateUrl: 'build/pages/getting-started/getting-started.html',
-    providers: [HubsAPIService]
 })
 export class GettingStartedPage {
 
@@ -13,7 +12,7 @@ export class GettingStartedPage {
     }
 
     constructor(nav, navParams, _apiService) {
-        this.api = _apiService.geApi();
+        this.api = _apiService.getApi();
         // the api is trying to reconnect every 1 second
         this.nav = nav;
     }

@@ -1,21 +1,22 @@
 <ion-navbar *navbar>
-  <button menuToggle>
-    <ion-icon name="menu"></ion-icon>
-  </button>
-  <ion-title>House List</ion-title>
+    <button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>House List</ion-title>
 </ion-navbar>
 
 <ion-content>
-  <ion-list>
-    <button ion-item *ngFor="#item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-left></ion-icon>
-      {{item.title}}
-      <div class="item-note" item-right>
-        {{item.note}}
-      </div>
-    </button>
-  </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
-  </div>
+    <ion-list>
+        <button ion-item *ngFor="#house of houses">
+            <ion-icon [name]="house.icon" item-left></ion-icon>
+            {{house.name}}
+            <ion-icon [name]="house.connectedIcon" item-right></ion-icon>
+            <button light round class="item-note" item-right [disabled]="!house.connected" (click)="vewComponent( house)">
+                View components
+            </button>
+        </button>
+    </ion-list>
+    <div *ngIf="selectedItem" padding>
+        You navigated here from <b>{{selectedItem.title}}</b>
+    </div>
 </ion-content>

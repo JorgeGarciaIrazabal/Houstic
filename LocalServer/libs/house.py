@@ -1,3 +1,4 @@
+import json
 import logging
 import time
 from wshubsapi import asynchronous
@@ -55,7 +56,7 @@ class House:
             modules = dict()
             for id_, module in self.module_connections.items():
                 # todo: do this in parallel
-                modules[id_] = module.call_in_module("get_components").result()
+                modules[id_] = json.loads(module.call_in_module("get_components").result())
             return modules
 
         def component_write(module_id, component_key, value):

@@ -3,7 +3,6 @@ import {HubsAPIService} from '../../services/HubsAPI';
 
 @Page({
   templateUrl: 'build/pages/register/register.html',
-  providers: [HubsAPIService]
 })
 export class Register {
 
@@ -12,7 +11,7 @@ export class Register {
   }
 
   constructor(nav, navParams, _apiService) {
-      this.api = _apiService.geApi();
+      this.api = _apiService.getApi();
       // the api is trying to reconnect every 1 second
       this.nav = nav;
   }

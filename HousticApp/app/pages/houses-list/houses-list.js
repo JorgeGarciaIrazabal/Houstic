@@ -1,35 +1,37 @@
 import {Page, NavController, NavParams} from 'ionic-angular';
 import {ComponentListPage} from '../components-list/components-list';
+import {HubsAPIService} from '../../services/HubsAPI';
 
 @Page({
-  templateUrl: 'build/pages/houses-list/houses-list.html'
+    templateUrl: 'build/pages/houses-list/houses-list.html'
 })
 export class HouseListPage {
-  static get parameters() {
-    return [[NavController], [NavParams]];
-  }
-
-  constructor(nav, navParams) {
-    this.nav = nav;
-
-    // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('item');
-
-    this.icons = ['home', 'home', 'home'];
-
-    this.items = [];
-    for(let i = 1; i < 4; i++) {
-      this.items.push({
-        title: 'Casa ' + i,
-        note: 'Ver componentes',
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
+    static get parameters() {
+        return [[NavController], [NavParams], [HubsAPIService]];
     }
-  }
 
-  itemTapped(event, item) {
-    this.nav.push(ComponentListPage, {
-      item: item
-    })
-  }
+    constructor(nav, navParams, _apiService) {
+        var self = this;
+        this.nav = nav;
+        this.api = _apiService.getApi();
+        // If we navigated to this page, we will have an item available as a nav param
+        this.houses = [];
+
+        this.api.HouseHub.server.listHouses()
+            .then(function (houses) {
+                self.houses = houses;
+                self.houses.map(function (house) {
+                    house.connectedIcon = house.connected ? "checkmark-circle-outline" : "close-circle";
+                    house.name = house.name || "undefined";
+                });
+            });
+
+        this.icons = ['home', 'home', 'home'];
+    }
+
+    vewComponent( house) {
+        this.nav.push(ComponentListPage, {
+            house: house
+        })
+    }
 }

@@ -1,3 +1,4 @@
+import json
 from wshubsapi.hubs_inspector import HubsInspector
 from wshubsapi.utils_api_hub import UtilsAPIHub
 
@@ -7,7 +8,14 @@ from hubs.middle_ware_hub import MiddleWareHub
 
 class HouseHub(MiddleWareHub):
     def list_houses(self):
-        return [c.ID for c in self.clients.get_all_clients()]
+        return_houses = []
+        connected_houses_ids = [h.ID for h in self._get_houses()]
+        for house in House.objects:
+            house_dict = json.loads(house.to_json())
+            house_dict["id"] = str(house.id)
+            house_dict["connected"] = house_dict["id"] in connected_houses_ids
+            return_houses.append(house_dict)
+        return return_houses
 
     def get_all_components(self, house_id):
         house = self.clients.get(house_id)

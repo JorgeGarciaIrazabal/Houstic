@@ -10,6 +10,12 @@ class HousticClient(ConnectedClient):
         super(HousticClient, self).__init__(comm_environment, write_msg_function)
         self.device = None
 
+    def is_house(self):
+        return self.device == ClientType.HOUSE
+
+    def is_mobile(self):
+        return self.device == ClientType.MOBILE
+
 
 class WSHandler(ConnectionHandler):
     log = logging.getLogger(__name__)

@@ -7,15 +7,16 @@ import {Injectable} from "angular2/core"
 export class HubsAPIService{
 
     constructor(){
+        console.log("creating hubsAPI");
+        this.api = new HubsAPI();
+        var MOBILE = 2; // defined in global server, HOUSE is 1
+        this.api.connect('ws://127.0.0.1:9517/' + MOBILE, 2);
         // todo: necessary to create an easy way to change between localhost and global server
-        var MOBILE = 1; // defined in global server, HOUSE is 0
-        this.api = new HubsAPI('ws://127.0.0.1:9517/' + MOBILE);
-        this.api.connect(2);
 
         // todo: handle generic errors here
     }
 
-    geApi(){
+    getApi(){
         return this.api;
     }
 }

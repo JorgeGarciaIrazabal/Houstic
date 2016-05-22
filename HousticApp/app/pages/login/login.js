@@ -2,8 +2,7 @@ import {Page, NavController, NavParams} from 'ionic-angular';
 import {HubsAPIService} from '../../services/HubsAPI';
 
 @Page({
-  templateUrl: 'build/pages/login/login.html',
-  providers: [HubsAPIService]
+  templateUrl: 'build/pages/login/login.html'
 })
 export class Login {
 
@@ -12,7 +11,8 @@ export class Login {
   }
 
   constructor(nav, navParams, _apiService) {
-      this.api = _apiService.geApi();
+      this.api = _apiService.getApi();
+      this.navParams = navParams;
       // the api is trying to reconnect every 1 second
       this.nav = nav;
   }
