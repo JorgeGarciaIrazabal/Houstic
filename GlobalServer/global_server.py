@@ -41,10 +41,20 @@ def __ask_action():
                 house_hub.component_read(house_id, module_id, 'light')
             elif option == "2":
                 house_hub.get_all_components(house_id)
+            elif option == "3":
+                house_hub.component_write(house_id, module_id, 'boiler', 0)
+            elif option == "4":
+                house_hub.component_write(house_id, module_id, 'boiler', 1)
+            elif option == "5":
+                house_hub.component_read(house_id, module_id, 'boiler')
+            elif option == "6":
+                house_hub.component_read(house_id, module_id, 'green')
             elif option == "reset":
                 house_hub.reset_module(house_id, module_id)
             elif option == "comm":
                 house_hub.stop_module_communication(house_id, module_id)
+            elif int(option) > 4:
+                house_hub.component_write(house_id, module_id, "green",  int(option))
         except:
             log.exception("error")
 

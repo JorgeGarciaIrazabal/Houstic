@@ -61,7 +61,7 @@ class ADC:
 
 
 class Pin:
-    IN, OUT, PULL_UP, PULL_DOWN, OUT_PP, IRQ_FALLING = range(6)
+    IN, OUT, PULL_UP, PULL_DOWN, OUT_PP, IRQ_FALLING, IRQ_RISING = range(7)
 
     def __init__(self, pin: int, mode=IN, value=None):
         self.value(value)
@@ -81,6 +81,9 @@ class Pin:
             self.low()
         else:
             self.high()
+
+    def irq(self, trigger, handler):
+        pass
 
 
 class Timer:
@@ -113,3 +116,18 @@ class Timer:
                 return 1.0 / self.frequency
 
         return Channel(timer, freq)
+
+
+class PWM:
+    def __init__(self, pin):
+        self._freq = 0
+        self._duty = 0
+        self._pin = pin
+
+    def freq(self, frequency=None):
+        self._freq = frequency if frequency is not None else self._freq
+        return self._freq
+
+    def duty(self, duty=None):
+        self._duty = duty if duty is not None else self._duty
+        return self._duty

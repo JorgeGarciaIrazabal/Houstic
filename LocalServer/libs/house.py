@@ -45,15 +45,8 @@ class House:
             time.sleep(Config.get().global_reconnect_timeout)
             self.__auto_reconnect_global_server_api()
 
-    @asynchronous.asynchronous()
-    def __ask_action(self):
-        while True:
-            text = input("introduce text: ")
-            self.global_server_api.HouseHub.client.componentWrite(1, 1 if text == "1" else 0)
-
     def initialize_communications(self):
         self.__auto_reconnect_global_server_api()
-        self.__ask_action()
         self.log.debug("house server created")
         self.house_server.serve_forever()
 

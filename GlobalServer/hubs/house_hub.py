@@ -24,7 +24,7 @@ class HouseHub(MiddleWareHub):
 
     def stop_module_communication(self, house_id, module_id):
         house = self.clients.get(house_id)
-        return house.stop_module_communication(module_id).result()
+        return house.stop_module_communication(module_id)
 
     def reset_module(self, house_id, module_id):
         house = self.clients.get(house_id)

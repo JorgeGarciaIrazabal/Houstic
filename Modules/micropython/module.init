@@ -2,23 +2,19 @@
     "components": {
         "green": {
             "pin": 12,
-            "mode": 1
+            "mode": 3
         },
         "blue": {
             "pin": 13,
-            "mode": 1
+            "mode": 3
         },
         "red": {
             "pin": 14,
-            "mode": 1
-        },
-        "button": {
-            "pin": 4,
-            "mode": 0
+            "mode": 3
         },
         "boiler": {
             "pin": 5,
-            "mode": 0
+            "mode": 1
         },
         "light": {
             "pin": 0,
