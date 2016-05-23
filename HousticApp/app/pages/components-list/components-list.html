@@ -7,15 +7,30 @@
 
 <ion-content>
     <ion-list>
-        <ion-item *ngFor="#component of components">
-            test
-            <module-component [component]="component"></module-component>
-            <!--<ion-icon [name]="component.icon" item-left></ion-icon>-->
-            <!--<ion-label>{{component.name}}</ion-label>-->
-            <!--<ion-toggle [(ngModel)]="component.value" item-right></ion-toggle>-->
-        </ion-item>
+        <div  *ngFor="#component of components">
+            <ion-item *ngIf="component.mode==0"> <!--digital_in-->
+                <ion-icon [name]="component.icon" item-left></ion-icon>
+                <ion-label>{{component.name}} {{component.mode}}</ion-label>
+                <ion-toggle [(ngModel)]="component.value" item-right></ion-toggle>
+            </ion-item>
+            <ion-item *ngIf="component.mode==1"> <!--digital_out-->
+                <ion-icon [name]="component.icon" item-left></ion-icon>
+                <ion-label>{{component.name}} {{component.mode}}</ion-label>
+                <ion-toggle [(ngModel)]="component.value" item-right></ion-toggle>
+            </ion-item>
+            <ion-item *ngIf="component.mode==2"> <!--analog_in-->
+                <ion-icon [name]="component.icon" item-left></ion-icon>
+                <ion-label>{{component.name}} {{component.mode}}</ion-label>
+                <input type="range" name="volume" [(ngModel)]="component.value"  min="0" max="1024">
+            </ion-item>
+            <div class="item range">
+                <i class="icon ion-volume-low"></i>
+                <input type="range" name="volume">
+                <i class="icon ion-volume-high"></i>
+            </div>
+        </div>
     </ion-list>
-    <div *ngIf="selectedItem" padding>
-        You navigated here from <b>{{selectedItem.title}}</b>
+    <div *ngIf="house" padding>
+        You navigated here from <b>{{house.name}}</b>
     </div>
 </ion-content>

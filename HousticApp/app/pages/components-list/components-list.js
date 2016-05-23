@@ -1,10 +1,8 @@
 import {Page, NavController, NavParams} from 'ionic-angular';
 import {HubsAPIService} from '../../services/HubsAPI';
-import {ModuleComponent} from '../../Components/ModuleComponent/module-component';
 
 @Page({
-    templateUrl: 'build/pages/components-list/components-list.html',
-    directives: [ModuleComponent]
+    templateUrl: 'build/pages/components-list/components-list.html'
 })
 export class ComponentListPage {
     static get parameters() {

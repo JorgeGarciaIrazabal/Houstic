@@ -1,0 +1,18 @@
+<ion-view view-title="House {{house.name}}">
+    <ion-content>
+        <ion-list>
+            <div ng-repeat="component in components">
+                <ion-toggle ng-if="component.mode!=3 && component.mode != 2"
+                            ng-module="component.value">{{component.name}}
+                </ion-toggle>
+                <div class="item range" ng-if="component.mode==3 || component.mode==2">
+                    {{component.name}}
+                    <i class="icon ion-minus-round"></i>
+                    <input type="range" name="volume" ng-model="component.value" min="0" max="1024"
+                           ng-disabled="component.mode==2" ng-change="onValueChanged(component)">
+                    <i class="icon ion-plus-round"></i>
+                </div>
+            </div>
+        </ion-list>
+    </ion-content>
+</ion-view>
