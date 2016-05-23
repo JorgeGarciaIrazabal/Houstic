@@ -16,7 +16,7 @@ angular.module('houstic.controllers')
             }
             changeTimer = $timeout(function () {
                 console.log(component.value);
-                houseServer.componentWrite($scope.house.id, component.moduleId, component.name, parseInt(component.value))
+                houseServer.componentWrite($scope.house.id, component.moduleId, component.index, parseInt(component.value))
                     .finally(function () {
                         changeTimer = null;
                     });
@@ -25,19 +25,14 @@ angular.module('houstic.controllers')
 
         HubsApi.HouseHub.server.getAllComponents($scope.house.id)
             .then(function (modules) {
-                for (var module in modules) {
-                    if (modules.hasOwnProperty(module)) {
-                        for (var componentKey in modules[module]) {
-                            if (modules[module].hasOwnProperty(componentKey)) {
-                                var component = modules[module][componentKey];
-                                component.name = componentKey;
-                                component.icon = 'bonfire';
-                                component.moduleId = module;
-                                $scope.components.push(component);
-                            }
-                        }
-                    }
-                }
+                modules.forEach(function (module) {
+                    module.components.forEach(function (component, id) {
+                        component.icon = 'bonfire';
+                        component.moduleId = module.id;
+                        component.index = id;
+                        $scope.components.push(component);
+                    })
+                });
             });
 
         $interval(function () {
@@ -45,7 +40,7 @@ angular.module('houstic.controllers')
                 return component.mode == 2;
             });
             sensors.forEach(function (sensor) {
-                houseServer.componentRead($scope.house.id, sensor.moduleId, sensor.name)
+                houseServer.componentRead($scope.house.id, sensor.moduleId, sensor.index)
                     .then(function (value) {
                         sensor.value = value;
                     })

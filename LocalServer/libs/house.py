@@ -53,19 +53,22 @@ class House:
 
     def construct_client_api(self):
         def get_components():
-            modules = dict()
+            modules_info = list()
             for id_, module in self.module_connections.items():
                 # todo: do this in parallel
-                modules[id_] = json.loads(module.call_in_module("get_components").result())
-            return modules
+                module_info = dict()
+                module_info["components"] = json.loads(module.call_in_module("get_components").result())
+                module_info["id"] = id_
+                modules_info.append(module_info)
+            return modules_info
 
-        def component_write(module_id, component_key, value):
+        def component_write(module_id, component_index, value):
             module = self.module_connections[module_id]
-            return module.call_in_module("component_write", component_key, value).result()
+            return module.call_in_module("component_write", component_index, value).result()
 
-        def component_read(module_id, component_id):
+        def component_read(module_id, component_index):
             module = self.module_connections[module_id]
-            return module.call_in_module("component_read", component_id).result()
+            return module.call_in_module("component_read", component_index).result()
 
         def reset_module(module_id):
             module = self.module_connections[module_id]

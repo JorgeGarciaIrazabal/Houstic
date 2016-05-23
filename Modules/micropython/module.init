@@ -1,24 +1,29 @@
 {
-    "components": {
-        "green": {
+    "components": [
+        {
             "pin": 12,
-            "mode": 3
+            "mode": 3,
+            "name": "green"
         },
-        "blue": {
+        {
             "pin": 13,
-            "mode": 3
+            "mode": 3,
+            "name": "blue"
         },
-        "red": {
+        {
             "pin": 14,
-            "mode": 3
+            "mode": 3,
+            "name": "red"
         },
-        "boiler": {
+        {
             "pin": 5,
-            "mode": 1
+            "mode": 1,
+            "name": "boiler"
         },
-        "light": {
+        {
             "pin": 0,
-            "mode": 2
+            "mode": 2,
+            "name": "light"
         }
-    }
+    ]
 }

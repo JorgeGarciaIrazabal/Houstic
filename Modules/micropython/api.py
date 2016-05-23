@@ -3,18 +3,21 @@ import json
 
 
 class Component:
-    def __init__(self, key, pin, mode):
+    def __init__(self, name, pin, mode):
         self.pin_num = pin
         self.mode = mode
-        self.key = key
+        self.name = name
 
     def value(self, *args):
         pass
 
+    def get_info_json(self):
+        return dict(pin=self.pin_num, mode=self.mode, value=self.value(), name=self.name)
+
 
 class DigitalComponent(Component):
-    def __init__(self, key, pin, mode):
-        super().__init__(key, pin, mode)
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
         self.pin = machine.Pin(pin, mode)
 
     def value(self, *args):
@@ -22,8 +25,8 @@ class DigitalComponent(Component):
 
 
 class AnalogInComponent(Component):
-    def __init__(self, key, pin, mode):
-        super().__init__(key, pin, mode)
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
         self.pin = machine.ADC(pin)
 
     def value(self):
@@ -31,8 +34,8 @@ class AnalogInComponent(Component):
 
 
 class AnalogOutComponent(Component):
-    def __init__(self, key, pin, mode):
-        super().__init__(key, pin, mode)
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
         self.pin = machine.Pin(pin)
         self.pwm = machine.PWM(self.pin)
         self.pwm.freq(500)
@@ -44,18 +47,18 @@ class AnalogOutComponent(Component):
         return self.pwm.duty()
 
 
-def construct_component(key, pin, mode):
+def construct_component(name, pin, mode):
     if mode == 0 or mode == 1:  # digital_in, digital_out
-        return DigitalComponent(key, pin, mode)
+        return DigitalComponent(name, pin, mode)
     elif mode == 2:  # analog_in
-        return AnalogInComponent(key, pin, mode)
+        return AnalogInComponent(name, pin, mode)
     elif mode == 3:  # analog_out
-        return AnalogOutComponent(key, pin, mode)
+        return AnalogOutComponent(name, pin, mode)
 
 
 class Api:
     def __init__(self, communication_handler):
-        self.components = dict()
+        self.components = list()
         self.communication_handler = communication_handler
 
     def handle(self, message):
@@ -66,23 +69,21 @@ class Api:
     def read_config(self):
         with open("module.init") as f:
             data = json.loads(f.read())
-            for key, data in data["components"].items():
-                print('constructing: {}'.format(key))
-                self.components[key] = construct_component(key, **data)
+            for component in data["components"]:
+                print('constructing: {}'.format(component["name"]))
+                self.components.append(construct_component(**component))
 
     def get_components(self):
-        components_dict = dict()
-        for key, component in self.components.items():
-            components_dict[key] = dict(pin=component.pin_num, mode=component.mode, value=component.value())
+        components_dict = [component.get_info_json() for component in self.components]
         return json.dumps(components_dict)
 
-    def component_write(self, key, value):
-        component = self.components[key]
+    def component_write(self, index, value):
+        component = self.components[index]
         component.value(value)
         return True
 
-    def component_read(self, key):
-        component = self.components[key]
+    def component_read(self, index):
+        component = self.components[index]
         return component.value()
 
     def reset(self):

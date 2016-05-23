@@ -62,6 +62,5 @@ class CommunicationHandler:
                 messages = self.message_separator.parse_data(data)
                 for message in messages:
                     self._handle_message(message)
-                print(str(data, 'utf8'), end='')
             else:
                 break
