@@ -9,11 +9,13 @@ from hubs.middle_ware_hub import MiddleWareHub
 class HouseHub(MiddleWareHub):
     def list_houses(self):
         return_houses = []
-        connected_houses_ids = [h.ID for h in self._get_houses()]
+        connected_houses = {h.ID: h.ip for h in self._get_houses()}
         for house in House.objects:
             house_dict = json.loads(house.to_json())
             house_dict["id"] = str(house.id)
-            house_dict["connected"] = house_dict["id"] in connected_houses_ids
+            house_dict["connected"] = house_dict["id"] in connected_houses
+
+            house_dict["ip"] = connected_houses[house_dict["id"]] if house_dict["connected"] else ""
             return_houses.append(house_dict)
         return return_houses
 

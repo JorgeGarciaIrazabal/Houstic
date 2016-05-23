@@ -32,7 +32,7 @@ angular.module('houstic.controllers')
                                 var component = modules[module][componentKey];
                                 component.name = componentKey;
                                 component.icon = 'bonfire';
-                                component.moduleId = module
+                                component.moduleId = module;
                                 $scope.components.push(component);
                             }
                         }

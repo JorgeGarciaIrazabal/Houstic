@@ -3,7 +3,7 @@
         <ion-list>
             <ion-item ng-repeat="house in houses" style="display: flex">
                 <div style="flex: auto">
-                    {{house.name}}
+                    {{house.name + ' : ' + house.ip}}
                 </div>
                 <button class="button button-stable" item-right ng-click="vewComponent(house)"
                         ng-disabled="!house.connected">

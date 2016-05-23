@@ -6,9 +6,10 @@ from enums import ClientType
 
 
 class HousticClient(ConnectedClient):
-    def __init__(self, comm_environment, write_msg_function):
+    def __init__(self, comm_environment, write_msg_function, ip):
         super(HousticClient, self).__init__(comm_environment, write_msg_function)
         self.device = None
+        self.ip = ip
 
     def is_house(self):
         return self.device == ClientType.HOUSE
@@ -22,7 +23,7 @@ class WSHandler(ConnectionHandler):
 
     def __init__(self, application, request, **kwargs):
         super(WSHandler, self).__init__(application, request, **kwargs)
-        self._connected_client = HousticClient(self.comm_environment, self.write_message)
+        self._connected_client = HousticClient(self.comm_environment, self.write_message, request.remote_ip)
         """:type: HousticClient"""
 
     def open(self, device, id_=None, *args):

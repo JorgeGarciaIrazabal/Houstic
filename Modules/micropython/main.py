@@ -17,12 +17,13 @@ print("waiting wifi connection...")
 while not sta_if.isconnected():
     pass
 
-house_ip = '192.168.1.6' if len(sys.argv) < 2 else sys.argv[1]
+house_ip = '192.168.1.29' if len(sys.argv) < 2 else sys.argv[1]
+port = 7160
 
 TYPE = "CALDERA"
 module_id = "-".join([str(i) for i in unique_id()])
 print(module_id)
 comm = CommunicationHandler(module_id, TYPE)
-comm.connect_to_server(house_ip, 7159)
+comm.connect_to_server(house_ip, port)
 
 comm.main_loop()
