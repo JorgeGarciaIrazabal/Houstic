@@ -8,7 +8,7 @@ import time
 files = []
 
 # files += glob.glob(join(os.pardir, 'module.init'))
-files += glob.glob(join(os.pardir, 'communication.py'))
+files += glob.glob(join(os.pardir, 'api.py'))
 
 # files = [join(os.pardir, f) for f in ['communication.py', 'main.py', 'api.py', 'module.init', 'module.py']]
 

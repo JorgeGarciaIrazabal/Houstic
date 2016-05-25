@@ -10,13 +10,26 @@ angular.module('houstic.controllers')
         $scope.house = {id: "574083ba97d0c72d7883c222", name: "myHouse"};
         $scope.components = [];
 
-        $scope.onValueChanged = function (component) {
+        $scope.onRangeChanged = function (component) {
             if (changeTimer) {
                 $timeout.cancel(changeTimer);
             }
             changeTimer = $timeout(function () {
                 console.log(component.value);
                 houseServer.componentWrite($scope.house.id, component.moduleId, component.index, parseInt(component.value))
+                    .finally(function () {
+                        changeTimer = null;
+                    });
+            }, 200)
+        };
+
+        $scope.onDigitalChanged = function (component) {
+            if (changeTimer) {
+                $timeout.cancel(changeTimer);
+            }
+            changeTimer = $timeout(function () {
+                console.log(component.value);
+                houseServer.componentWrite($scope.house.id, component.moduleId, component.index, component.value ? 1 : 0)
                     .finally(function () {
                         changeTimer = null;
                     });
@@ -30,6 +43,7 @@ angular.module('houstic.controllers')
                         component.icon = 'bonfire';
                         component.moduleId = module.id;
                         component.index = id;
+                        component.value = parseInt(component.value);
                         $scope.components.push(component);
                     })
                 });
@@ -43,6 +57,9 @@ angular.module('houstic.controllers')
                 houseServer.componentRead($scope.house.id, sensor.moduleId, sensor.index)
                     .then(function (value) {
                         sensor.value = value;
+                    })
+                    .catch(function (error) {
+                        console.error(error);
                     })
             });
         }, 1000)

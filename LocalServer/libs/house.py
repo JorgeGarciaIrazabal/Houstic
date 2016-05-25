@@ -20,6 +20,12 @@ class House:
         ModuleConnection.on_open = self.on_module_connected
         ModuleConnection.on_close = self.on_module_closed
 
+    def _get_module(self, id_):
+        if id_ in self.module_connections:
+            return self.module_connections[id_]
+        else:
+            raise Exception("No module with id: {}".format(id_))
+
     def on_module_connected(self, handler: ModuleConnection):
         self.module_connections[handler.id] = handler
         self.log.info("module connected")
@@ -63,19 +69,19 @@ class House:
             return modules_info
 
         def component_write(module_id, component_index, value):
-            module = self.module_connections[module_id]
+            module = self._get_module(module_id)
             return module.call_in_module("component_write", component_index, value).result()
 
         def component_read(module_id, component_index):
-            module = self.module_connections[module_id]
+            module = self._get_module(module_id)
             return module.call_in_module("component_read", component_index).result()
 
         def reset_module(module_id):
-            module = self.module_connections[module_id]
+            module = self._get_module(module_id)
             return module.call_in_module("reset").result()
 
         def stop_module_communication(module_id):
-            module = self.module_connections[module_id]
+            module = self._get_module(module_id)
             return module.call_in_module("stop_communication").result()
 
         self.global_server_api.HouseHub.client.get_components = get_components

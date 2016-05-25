@@ -4,7 +4,6 @@ import json
 
 class Api:
     def __init__(self, module):
-        self.components = list()
         self.module = module
         self.communication_handler = module.communication_handler
 
@@ -14,16 +13,16 @@ class Api:
         return function(*msg_obj["args"])
 
     def get_components(self):
-        components_dict = [component.get_info_json() for component in self.components]
+        components_dict = [component.get_info_json() for component in self.module.components]
         return json.dumps(components_dict)
 
     def component_write(self, index, value):
-        component = self.components[index]
+        component = self.module.components[index]
         component.value(value)
         return True
 
     def component_read(self, index):
-        component = self.components[index]
+        component = self.module.components[index]
         return component.value()
 
     def reset(self):
