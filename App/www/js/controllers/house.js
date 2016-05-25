@@ -49,7 +49,7 @@ angular.module('houstic.controllers')
                 });
             });
 
-        $interval(function () {
+        var interval = $interval(function () {
             var sensors = $scope.components.filter(function (component) {
                 return component.mode == 2;
             });
@@ -58,9 +58,18 @@ angular.module('houstic.controllers')
                     .then(function (value) {
                         sensor.value = value;
                     })
-                    .catch(function (error) {
-                        console.error(error);
+                    .catch(function (exception) {
+                        if(exception.error !== undefined && exception.error.indexOf('No module with id')>=0){
+                            $interval.cancel(interval);
+                            alert("Module disconected");
+                        }
                     })
             });
-        }, 1000)
+        }, 1000);
+
+        $scope.$on("$destroy", function() {
+            if (interval) {
+                $interval.cancel(interval);
+            }
+        });
     });
