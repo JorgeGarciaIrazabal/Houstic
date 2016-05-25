@@ -1,8 +1,6 @@
 import socket
 import json
 
-from api import Api
-
 
 class MessageSeparator:
     DEFAULT_API_SEP = "*API_SEP*"
@@ -19,35 +17,39 @@ class MessageSeparator:
 
 
 class CommunicationHandler:
-    def __init__(self, id_, type_):
+    def __init__(self, module):
         self.socket = None
         ''':type : socket.socket'''
         self.message_separator = MessageSeparator("~")
-        self.api = Api(self)
-        self.api.read_config()
-        self.type = type_
-        self.id = id_
+        self.module = module
+        ''':type : module.Module'''
 
     def _handle_message(self, msg):
         msg_obj = dict(success=True, reply="")
         try:
-            msg_obj['reply'] = self.api.handle(msg)
+            msg_obj['reply'] = self.module.api.handle(msg)
         except Exception as e:
             msg_obj['reply'] = str(e)
             msg_obj['success'] = False
         self.write_message(json.dumps(msg_obj))
 
     def _send_handshake(self):
-        handshake = dict(handshake=True, id=self.id, type=self.type)
+        handshake = dict(handshake=True, id=self.module.id, type=self.module.type)
         self.write_message(json.dumps(handshake))
 
     def connect_to_server(self, ip, port):
-        address = socket.getaddrinfo(ip, port)[0][-1]
-        print("connecting to", address)
-        self.socket = socket.socket()
-        self.socket.connect(address)
-        self._send_handshake()
-        print("connected")
+        try:
+            address = socket.getaddrinfo(ip, port)[0][-1]
+            print("connecting to", address)
+            self.socket = socket.socket()
+            self.socket.connect(address)
+            self._send_handshake()
+            print("connected")
+            self.module.get_component_by_name("green").value(1023)
+        except:
+            self.module.get_component_by_name("green").value(0)
+            self.module.get_component_by_name("red").value(1023)
+            raise
 
     def write_message(self, message):
         self.socket.send(bytes(message + self.message_separator.separator, 'utf-8'))
@@ -57,10 +59,16 @@ class CommunicationHandler:
 
     def main_loop(self):
         while True:
-            data = self.socket.recv(100)
-            if data:
-                messages = self.message_separator.parse_data(data)
-                for message in messages:
-                    self._handle_message(message)
-            else:
+            try:
+                data = self.socket.recv(100)
+                if data:
+                    messages = self.message_separator.parse_data(data)
+                    for message in messages:
+                        self._handle_message(message)
+                else:
+                    break
+            except:
                 break
+        print("Disconnected\n\n")
+        self.module.get_component_by_name("red").value(1024)
+        self.module.get_component_by_name("green").value(0)

@@ -4,10 +4,13 @@ import glob
 from os.path import join
 import time
 
-# files = glob.glob(join(os.pardir, 'module.init'))
-# files = glob.glob(join(os.pardir, 'communication.py'))
 
-files = [join(os.pardir, f) for f in ['communication.py', 'main.py', 'api.py', 'module.init']]
+files = []
+
+# files += glob.glob(join(os.pardir, 'module.init'))
+files += glob.glob(join(os.pardir, 'communication.py'))
+
+# files = [join(os.pardir, f) for f in ['communication.py', 'main.py', 'api.py', 'module.init', 'module.py']]
 
 files = filter(lambda x: "__" not in x, files)
 web_cli = join(os.pardir, 'webrepl', 'webrepl_cli.py')

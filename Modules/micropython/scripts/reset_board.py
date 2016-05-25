@@ -18,3 +18,14 @@ subprocess.call([python, esptool, "--port", port, "erase_flash"])
 # subprocess.call([python, esptool,  "--port", port, "--baud", baudrate, "write_flash", "--flash_size=8m", "0", firmware])
 #mcu
 subprocess.call([python, esptool,  "--port", port, "--baud", baudrate, "write_flash", "--flash_size=8m", "-fm", "dio", "0", firmware])
+
+
+
+
+# import network
+# wlan = network.WLAN(network.STA_IF) # create station interface
+# wlan.active(True)       # activate the interface
+# wlan.scan()             # scan for access points
+# wlan.isconnected()      # check if the station is connected to an AP
+# wlan.connect('essid', 'password') # connect to an AP
+# wlan.connect('JAZZTEL_9A3B', 'FA020156120757200985040689')
