@@ -3,11 +3,10 @@
  */
 angular.module('houstic.controllers')
     .controller('HouseCtrl', function ($scope, $stateParams, $timeout, $interval, HubsApi) {
-        console.log("house");
-        var changeTimer = null,
-            houseServer = HubsApi.HouseHub.server;
-        $scope.house = $stateParams.house;
-        $scope.house = {id: "574083ba97d0c72d7883c222", name: "myHouse"};
+        var changeTimer = null;
+        $scope.house_info = $stateParams.house_info;
+        $scope.house_info = $scope.house_info || {id: "574083ba97d0c72d7883c222", name: "myHouse"};
+        $scope.house = HubsApi.HouseHub.getClients($scope.house_info.id);
         $scope.components = [];
 
         $scope.onRangeChanged = function (component) {
@@ -16,7 +15,7 @@ angular.module('houstic.controllers')
             }
             changeTimer = $timeout(function () {
                 console.log(component.value);
-                houseServer.componentWrite($scope.house.id, component.moduleId, component.index, parseInt(component.value))
+                $scope.house.componentWrite(component.moduleId, component.index, parseInt(component.value))
                     .finally(function () {
                         changeTimer = null;
                     });
@@ -29,14 +28,14 @@ angular.module('houstic.controllers')
             }
             changeTimer = $timeout(function () {
                 console.log(component.value);
-                houseServer.componentWrite($scope.house.id, component.moduleId, component.index, component.value ? 1 : 0)
+                $scope.house.componentWrite(component.moduleId, component.index, component.value ? 1 : 0)
                     .finally(function () {
                         changeTimer = null;
                     });
-            }, 200)
+            }, 200);
         };
 
-        HubsApi.HouseHub.server.getAllComponents($scope.house.id)
+        $scope.house.getComponents()
             .then(function (modules) {
                 modules.forEach(function (module) {
                     module.components.forEach(function (component, id) {
@@ -54,7 +53,7 @@ angular.module('houstic.controllers')
                 return component.mode == 2;
             });
             sensors.forEach(function (sensor) {
-                houseServer.componentRead($scope.house.id, sensor.moduleId, sensor.index)
+                $scope.house.componentRead(sensor.moduleId, sensor.index)
                     .then(function (value) {
                         sensor.value = value;
                     })

@@ -8,7 +8,7 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
         defaultRespondTimeout = serverTimeout || 5000,
         thisApi = this,
         messagesBeforeOpen = [],
-        emptyFunction = function () {},
+        emptyFunction = function () {return function () {}}, //redefine any empty function as required
         onOpenTriggers = [];
 
     PromiseClass = PromiseClass || Promise;
@@ -59,8 +59,8 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
                 if (reconnectTimeout !== -1) {
                     window.setTimeout(function () {
                         thisApi.connect(url, reconnectTimeout);
-                        thisApi.callbacks.onReconnecting(error);
-                    }, reconnectTimeout * 1000);
+                        thisApi.onReconnecting(error);
+                    }, reconnectTimeout);
                 }
             }
 
@@ -73,7 +73,7 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
 
             thisApi.wsClient.onopen = function () {
                 resolve();
-                thisApi.callbacks.onOpen(thisApi);
+                thisApi.onOpen(thisApi);
                 onOpenTriggers.forEach(function (trigger) {
                     trigger();
                 });
@@ -84,7 +84,7 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
 
             thisApi.wsClient.onclose = function (error) {
                 reject(error);
-                thisApi.callbacks.onClose(error);
+                thisApi.onClose(error);
                 reconnect(error);
             };
 
@@ -133,7 +133,7 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
                                 }
                             }
                         } else {
-                            thisApi.callbacks.onClientFunctionNotFound(msgObj.hub, msgObj.function);
+                            thisApi.onClientFunctionNotFound(msgObj.hub, msgObj.function);
                         }
                     }
                 } catch (err) {
@@ -142,18 +142,16 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
             };
 
             thisApi.wsClient.onMessageError = function (error) {
-                thisApi.callbacks.onMessageError(error);
+                thisApi.onMessageError(error);
             };
         });
     };
 
-    this.callbacks = {
-        onClose: emptyFunction,
-        onOpen: emptyFunction,
-        onReconnecting: emptyFunction,
-        onMessageError: emptyFunction,
-        onClientFunctionNotFound: emptyFunction
-    };
+    this.onClose = emptyFunction();
+    this.onOpen = emptyFunction();
+    this.onReconnecting = emptyFunction();
+    this.onMessageError = emptyFunction();
+    this.onClientFunctionNotFound = emptyFunction();
 
     this.defaultErrorHandler = null;
 
@@ -187,106 +185,6 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
         return promise;
     };
     
-    this.HouseHub = {};
-    this.HouseHub.server = {
-        __HUB_NAME : 'HouseHub',
-        
-        subscribeToHub : function (){
-            
-            return constructMessage('HouseHub', 'subscribe_to_hub', arguments);
-        },
-
-        getAllComponents : function (houseId){
-            
-            return constructMessage('HouseHub', 'get_all_components', arguments);
-        },
-
-        listHouses : function (){
-            
-            return constructMessage('HouseHub', 'list_houses', arguments);
-        },
-
-        unsubscribeFromHub : function (){
-            
-            return constructMessage('HouseHub', 'unsubscribe_from_hub', arguments);
-        },
-
-        getInstance : function (){
-            
-            return constructMessage('HouseHub', 'get_instance', arguments);
-        },
-
-        resetModule : function (houseId, moduleId){
-            
-            return constructMessage('HouseHub', 'reset_module', arguments);
-        },
-
-        create : function (){
-            
-            return constructMessage('HouseHub', 'create', arguments);
-        },
-
-        componentRead : function (houseId, moduleId, componentKey){
-            
-            return constructMessage('HouseHub', 'component_read', arguments);
-        },
-
-        stopModuleCommunication : function (houseId, moduleId){
-            
-            return constructMessage('HouseHub', 'stop_module_communication', arguments);
-        },
-
-        componentWrite : function (houseId, moduleId, componentKey, value){
-            
-            return constructMessage('HouseHub', 'component_write', arguments);
-        },
-
-        getSubscribedClientsIds : function (){
-            
-            return constructMessage('HouseHub', 'get_subscribed_clients_ids', arguments);
-        }
-    };
-    this.HouseHub.client = {};
-    this.UtilsAPIHub = {};
-    this.UtilsAPIHub.server = {
-        __HUB_NAME : 'UtilsAPIHub',
-        
-        isClientConnected : function (clientId){
-            
-            return constructMessage('UtilsAPIHub', 'is_client_connected', arguments);
-        },
-
-        getHubsStructure : function (){
-            
-            return constructMessage('UtilsAPIHub', 'get_hubs_structure', arguments);
-        },
-
-        setId : function (clientId){
-            
-            return constructMessage('UtilsAPIHub', 'set_id', arguments);
-        },
-
-        subscribeToHub : function (){
-            
-            return constructMessage('UtilsAPIHub', 'subscribe_to_hub', arguments);
-        },
-
-        getSubscribedClientsIds : function (){
-            
-            return constructMessage('UtilsAPIHub', 'get_subscribed_clients_ids', arguments);
-        },
-
-        unsubscribeFromHub : function (){
-            
-            return constructMessage('UtilsAPIHub', 'unsubscribe_from_hub', arguments);
-        },
-
-        getId : function (){
-            
-            return constructMessage('UtilsAPIHub', 'get_id', arguments);
-        }
-    };
-    this.UtilsAPIHub.client = {};
     this.UserHub = {};
     this.UserHub.server = {
         __HUB_NAME : 'UserHub',
@@ -296,9 +194,9 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
             return constructMessage('UserHub', 'register', arguments);
         },
 
-        removeHouse : function (houseId){
+        getMyHouses : function (){
             
-            return constructMessage('UserHub', 'remove_house', arguments);
+            return constructMessage('UserHub', 'get_my_houses', arguments);
         },
 
         addHouse : function (house){
@@ -311,16 +209,6 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
             return constructMessage('UserHub', 'subscribe_to_hub', arguments);
         },
 
-        getMyHouses : function (){
-            
-            return constructMessage('UserHub', 'get_my_houses', arguments);
-        },
-
-        getSubscribedClientsIds : function (){
-            
-            return constructMessage('UserHub', 'get_subscribed_clients_ids', arguments);
-        },
-
         unsubscribeFromHub : function (){
             
             return constructMessage('UserHub', 'unsubscribe_from_hub', arguments);
@@ -329,9 +217,173 @@ function HubsAPI(serverTimeout, wsClientClass, PromiseClass) {
         login : function (userJson){
             
             return constructMessage('UserHub', 'login', arguments);
+        },
+
+        getSubscribedClientsIds : function (){
+            
+            return constructMessage('UserHub', 'get_subscribed_clients_ids', arguments);
+        },
+
+        removeHouse : function (houseId){
+            
+            return constructMessage('UserHub', 'remove_house', arguments);
         }
     };
-    this.UserHub.client = {};
+    this.UserHub.client = {
+        __HUB_NAME : 'UserHub',
+        
+    };
+    this.UserHub.getClients = function(clientsIds){
+        return {
+            clientsIds: clientsIds,
+            call: function (functionName, functionArgs) {
+                var bodyArgs = [this.clientsIds, functionName, functionArgs];
+                return constructMessage('UserHub', '_client_to_clients_bridge', bodyArgs);
+            },
+        }
+    };
+    this.HouseHub = {};
+    this.HouseHub.server = {
+        __HUB_NAME : 'HouseHub',
+        
+        create : function (){
+            
+            return constructMessage('HouseHub', 'create', arguments);
+        },
+
+        getInstance : function (){
+            
+            return constructMessage('HouseHub', 'get_instance', arguments);
+        },
+
+        subscribeToHub : function (){
+            
+            return constructMessage('HouseHub', 'subscribe_to_hub', arguments);
+        },
+
+        listHouses : function (){
+            
+            return constructMessage('HouseHub', 'list_houses', arguments);
+        },
+
+        unsubscribeFromHub : function (){
+            
+            return constructMessage('HouseHub', 'unsubscribe_from_hub', arguments);
+        },
+
+        getSubscribedClientsIds : function (){
+            
+            return constructMessage('HouseHub', 'get_subscribed_clients_ids', arguments);
+        }
+    };
+    this.HouseHub.client = {
+        __HUB_NAME : 'HouseHub',
+        
+        resetModule : emptyFunction(),
+
+        componentRead : emptyFunction(),
+
+        stopModuleCommunication : emptyFunction(),
+
+        componentWrite : emptyFunction(),
+
+        getComponents : emptyFunction()
+    };
+    this.HouseHub.getClients = function(clientsIds){
+        return {
+            clientsIds: clientsIds,
+            call: function (functionName, functionArgs) {
+                var bodyArgs = [this.clientsIds, functionName, functionArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            },
+            resetModule : function (moduleId){
+                
+                var funcArgs = Array.prototype.slice.call(arguments);
+                var bodyArgs = [this.clientsIds, 'reset_module', funcArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            },
+
+            componentRead : function (moduleId, componentIndex){
+                
+                var funcArgs = Array.prototype.slice.call(arguments);
+                var bodyArgs = [this.clientsIds, 'component_read', funcArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            },
+
+            stopModuleCommunication : function (moduleId){
+                
+                var funcArgs = Array.prototype.slice.call(arguments);
+                var bodyArgs = [this.clientsIds, 'stop_module_communication', funcArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            },
+
+            componentWrite : function (moduleId, componentIndex, value){
+                
+                var funcArgs = Array.prototype.slice.call(arguments);
+                var bodyArgs = [this.clientsIds, 'component_write', funcArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            },
+
+            getComponents : function (){
+                
+                var funcArgs = Array.prototype.slice.call(arguments);
+                var bodyArgs = [this.clientsIds, 'get_components', funcArgs];
+                return constructMessage('HouseHub', '_client_to_clients_bridge', bodyArgs);
+            }
+        }
+    };
+    this.UtilsAPIHub = {};
+    this.UtilsAPIHub.server = {
+        __HUB_NAME : 'UtilsAPIHub',
+        
+        subscribeToHub : function (){
+            
+            return constructMessage('UtilsAPIHub', 'subscribe_to_hub', arguments);
+        },
+
+        getHubsStructure : function (){
+            
+            return constructMessage('UtilsAPIHub', 'get_hubs_structure', arguments);
+        },
+
+        setId : function (clientId){
+            
+            return constructMessage('UtilsAPIHub', 'set_id', arguments);
+        },
+
+        getId : function (){
+            
+            return constructMessage('UtilsAPIHub', 'get_id', arguments);
+        },
+
+        unsubscribeFromHub : function (){
+            
+            return constructMessage('UtilsAPIHub', 'unsubscribe_from_hub', arguments);
+        },
+
+        isClientConnected : function (clientId){
+            
+            return constructMessage('UtilsAPIHub', 'is_client_connected', arguments);
+        },
+
+        getSubscribedClientsIds : function (){
+            
+            return constructMessage('UtilsAPIHub', 'get_subscribed_clients_ids', arguments);
+        }
+    };
+    this.UtilsAPIHub.client = {
+        __HUB_NAME : 'UtilsAPIHub',
+        
+    };
+    this.UtilsAPIHub.getClients = function(clientsIds){
+        return {
+            clientsIds: clientsIds,
+            call: function (functionName, functionArgs) {
+                var bodyArgs = [this.clientsIds, functionName, functionArgs];
+                return constructMessage('UtilsAPIHub', '_client_to_clients_bridge', bodyArgs);
+            },
+        }
+    };
 }
 /* jshint ignore:end */
 /* ignore jslint end */

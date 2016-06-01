@@ -1,12 +1,12 @@
 <ion-view view-title="Houses">
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="house in houses" style="display: flex">
+            <ion-item ng-repeat="house_info in houses" style="display: flex">
                 <div style="flex: auto">
-                    {{house.name + ' : ' + house.ip}}
+                    {{house_info.name + ' : ' + house_info.ip}}
                 </div>
-                <button class="button button-stable" item-right ng-click="vewComponent(house)"
-                        ng-disabled="!house.connected">
+                <button class="button button-stable" item-right ng-click="vewComponent(house_info)"
+                        ng-disabled="!house_info.connected">
                     view components
                 </button>
             </ion-item>

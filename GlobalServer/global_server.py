@@ -30,7 +30,8 @@ def __ask_action():
         option = input("introduce value: ")
         house_hub = HouseHub.get_instance()
         try:
-            house_id = house_hub.list_houses()[0]
+            houses = house_hub.list_houses()
+            house_id = next(h["id"] for h in houses if h["connected"])
             log.info("received house_id: {}".format(house_id))
             house = house_hub.get_all_components(house_id)
             log.info("received components: {}".format(house.items()))

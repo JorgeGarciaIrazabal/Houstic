@@ -1,11 +1,11 @@
 angular.module('houstic.controllers')
     .controller('HouseListCtrl', function ($scope, $state, HubsApi) {
-        console.log("house list");
+        console.log("house_info list");
         $scope.houses = [];
 
 
-        $scope.vewComponent = function (house) {
-            $state.go("app.house", {house: house})
+        $scope.vewComponent = function (house_info) {
+            $state.go("app.house", {house_info: house_info})
         };
 
         HubsApi.HouseHub.server.listHouses()

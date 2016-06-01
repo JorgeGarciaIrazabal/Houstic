@@ -19,26 +19,26 @@ class HouseHub(MiddleWareHub):
             return_houses.append(house_dict)
         return return_houses
 
-    def get_all_components(self, house_id):
-        house = self.clients.get(house_id)
-        components = house.get_components().result()
-        return components
-
-    def component_write(self, house_id, module_id, component_key, value):
-        house = self.clients.get(house_id)
-        return house.component_write(module_id, component_key, value).result()
-
-    def component_read(self, house_id, module_id, component_key):
-        house = self.clients.get(house_id)
-        return house.component_read(module_id, component_key).result()
-
-    def stop_module_communication(self, house_id, module_id):
-        house = self.clients.get(house_id)
-        return house.stop_module_communication(module_id)
-
-    def reset_module(self, house_id, module_id):
-        house = self.clients.get(house_id)
-        return house.reset_module(module_id).result()
+    # def get_all_components(self, house_id):
+    #     house = self.clients.get(house_id)
+    #     components = house.get_components().result()
+    #     return components
+    #
+    # def component_write(self, house_id, module_id, component_key, value):
+    #     house = self.clients.get(house_id)
+    #     return house.component_write(module_id, component_key, value).result()
+    #
+    # def component_read(self, house_id, module_id, component_key):
+    #     house = self.clients.get(house_id)
+    #     return house.component_read(module_id, component_key).result()
+    #
+    # def stop_module_communication(self, house_id, module_id):
+    #     house = self.clients.get(house_id)
+    #     return house.stop_module_communication(module_id)
+    #
+    # def reset_module(self, house_id, module_id):
+    #     house = self.clients.get(house_id)
+    #     return house.reset_module(module_id).result()
 
     def create(self, _sender):
         house = House()
@@ -55,3 +55,10 @@ class HouseHub(MiddleWareHub):
         :rtype: HouseHub
         """
         return HubsInspector.get_hub_instance(cls)
+
+    def _define_client_functions(self):
+        return dict(get_components=lambda: None,
+                    component_write=lambda module_id, component_index, value: None,
+                    component_read=lambda module_id, component_index: None,
+                    reset_module=lambda module_id: None,
+                    stop_module_communication=lambda module_id: None)
