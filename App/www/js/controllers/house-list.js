@@ -1,19 +1,27 @@
 angular.module('houstic.controllers')
     .controller('HouseListCtrl', function ($scope, $state, HubsApi) {
-        console.log("house_info list");
+        console.log("houseInfo list");
         $scope.houses = [];
 
 
-        $scope.vewComponent = function (house_info) {
-            $state.go("app.house", {house_info: house_info})
+        $scope.vewComponent = function (houseInfo) {
+            if(houseInfo.connected){
+                $state.go("app.moduleList", {houseInfo: houseInfo})
+            }
         };
 
-        HubsApi.HouseHub.server.listHouses()
-            .then(function (houses) {
-                $scope.houses = houses;
-                $scope.houses.map(function (house) {
-                    house.connectedIcon = house.connected ? "checkmark-circle-outline" : "close-circle";
-                    house.name = house.name || "undefined";
+        $scope.viewHouseDetails = function (houseInfo) {
+            $state.go("app.house", {houseInfo: houseInfo})
+        };
+
+        $scope.$on('$ionicView.beforeEnter', function () {
+            HubsApi.HouseHub.server.listHouses()
+                .then(function (houses) {
+                    $scope.houses = houses;
+                    $scope.houses.map(function (house) {
+                        house.connectedIcon = house.connected ? "checkmark-circle-outline" : "close-circle";
+                        house.formattedName = house.name || "undefined";
+                    });
                 });
-            });
+        })
     });

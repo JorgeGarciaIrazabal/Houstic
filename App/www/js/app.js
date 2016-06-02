@@ -76,9 +76,19 @@ angular.module('houstic', ['ionic', 'houstic.controllers', 'houstic.factories', 
                     }
                 }
             })
+            .state('app.moduleList', {
+                url: '/moduleList',
+                params: {houseInfo: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/moduleList.html',
+                        controller: 'ModuleListCtrl'
+                    }
+                }
+            })
             .state('app.house', {
                 url: '/house',
-                params: {house_info: null},
+                params: {houseInfo: null},
                 views: {
                     'menuContent': {
                         templateUrl: 'templates/house.html',

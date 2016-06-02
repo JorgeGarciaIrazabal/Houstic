@@ -49,6 +49,12 @@ class HouseHub(MiddleWareHub):
         api_hub.set_id(id_, _sender)
         return id_
 
+    def update(self, house_info):
+        house = House.objects(id=house_info["id"]).get()
+        house.name = house_info["name"]
+        house.icon = house_info["icon"]
+        house.save()
+
     @classmethod
     def get_instance(cls):
         """
@@ -57,7 +63,7 @@ class HouseHub(MiddleWareHub):
         return HubsInspector.get_hub_instance(cls)
 
     def _define_client_functions(self):
-        return dict(get_components=lambda: None,
+        return dict(get_modules=lambda: None,
                     component_write=lambda module_id, component_index, value: None,
                     component_read=lambda module_id, component_index: None,
                     reset_module=lambda module_id: None,

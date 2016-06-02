@@ -10,8 +10,8 @@ class Config(ConfigBase):
     def __init__(self):
         self.port = 9517
         self.mongo = dict(db="houstic", host=None, port=None, username=None, password=None)
-        self.js_client_path = os.path.join(os.pardir, "HousticApp", "app", "libs")
-        self.py_client_path = os.path.join(os.pardir, "LocalServer", "libs")
+        self.js_client_path = os.path.join(os.pardir, "App", "www", "js", "libs", "hubsApi.js")
+        self.py_client_path = os.path.join(os.pardir, "LocalServer", "libs", "hubs_api.py")
         # super init has to be after declaring attributes to store them correctly
         super(Config, self).__init__()
 

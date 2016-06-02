@@ -1,18 +1,28 @@
-<ion-view view-title="House {{house_info.name}}">
+<ion-view view-title="House {{houseInfo.name}}">
     <ion-content>
+
         <ion-list>
-            <div ng-repeat="component in components">
-                <ion-toggle ng-if="component.mode!=3 && component.mode != 2"
-                            ng-model="component.value" ng-change="onDigitalChanged(component)">{{component.name}}
-                </ion-toggle>
-                <div class="item range" ng-if="component.mode==3 || component.mode==2">
-                    {{component.name}}
-                    <i class="icon ion-minus-round"></i>
-                    <input type="range" name="volume" ng-model="component.value" min="0" max="1024"
-                           ng-disabled="component.mode==2" ng-change="onRangeChanged(component)">
-                    <i class="icon ion-plus-round"></i>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">House name</span>
+                <input type="text" placeholder="House name" ng-model="houseInfo.name">
+            </label>
+            <label class="item">
+                <span class="input-label">IP</span>
+                <label>{{houseInfo.ip}}</label>
+            </label>
+
+            <ion-item>
+                <div class="row">
+                    <div class="col col-33">
+                        <button class="button button-block button-energized" ng-click="rebootHouse()">
+                            Reboot
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button class="button button-block button-positive" ng-click="saveChanges()">Save</button>
+                    </div>
                 </div>
-            </div>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-view>

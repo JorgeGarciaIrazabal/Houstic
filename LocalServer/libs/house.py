@@ -63,7 +63,7 @@ class House(HubsAPI.HouseHubClass.ClientClass):
     #  Client api  #
     ################
 
-    def get_components(self, ):
+    def get_modules(self):
         modules_info = list()
         for id_, module in self.module_connections.items():
             # todo: do this in parallel
