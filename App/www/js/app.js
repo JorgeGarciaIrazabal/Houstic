@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('houstic', ['ionic', 'houstic.controllers', 'houstic.factories', 'houstic.constants'])
+angular.module('houstic', ['ionic', 'houstic.controllers', 'houstic.factories', 'houstic.constants', 'houstic.directives'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -76,6 +76,16 @@ angular.module('houstic', ['ionic', 'houstic.controllers', 'houstic.factories', 
                     }
                 }
             })
+            .state('app.house', {
+                url: '/house',
+                params: {houseInfo: null},
+                views: {
+                    'menuContent': {
+                        templateUrl: 'templates/house.html',
+                        controller: 'HouseCtrl'
+                    }
+                }
+            })
             .state('app.moduleList', {
                 url: '/moduleList',
                 params: {houseInfo: null},
@@ -86,16 +96,17 @@ angular.module('houstic', ['ionic', 'houstic.controllers', 'houstic.factories', 
                     }
                 }
             })
-            .state('app.house', {
-                url: '/house',
-                params: {houseInfo: null},
+            .state('app.components', {
+                url: '/components',
+                params: {module: null, houseInfo: null},
                 views: {
                     'menuContent': {
-                        templateUrl: 'templates/house.html',
-                        controller: 'HouseCtrl'
+                        templateUrl: 'templates/components.html',
+                        controller: 'ComponentsCtrl'
                     }
                 }
             });
+
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/app/playlists');
     });

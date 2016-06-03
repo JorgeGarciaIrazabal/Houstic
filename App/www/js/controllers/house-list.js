@@ -22,6 +22,9 @@ angular.module('houstic.controllers')
                         house.connectedIcon = house.connected ? "checkmark-circle-outline" : "close-circle";
                         house.formattedName = house.name || "undefined";
                     });
-                });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });;
         })
     });

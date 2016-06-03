@@ -1,1 +1,10 @@
 /* Empty. Add your own CSS if you like */
+
+
+.house__connected {
+  background: #D3FFCB;
+}
+
+.house__notConnected {
+  background: #D6D6D6;
+}

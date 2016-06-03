@@ -70,6 +70,7 @@ class House(HubsAPI.HouseHubClass.ClientClass):
             module_info = dict()
             module_info["components"] = json.loads(module.call_in_module("get_components").result())
             module_info["id"] = id_
+            module_info["type"] = module.type
             modules_info.append(module_info)
         return modules_info
 

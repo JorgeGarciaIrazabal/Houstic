@@ -1,5 +1,5 @@
 jenkinsapi
-wshubsapi>=0.7.7
+wshubsapi>=0.8.1
 glob2
 tornado
 mongoengine

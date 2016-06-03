@@ -1,0 +1,11 @@
+<div ng-controller="BoilerCtrl">
+    <li class="item item-toggle" ng-lo>
+        {{mainComponent.name}}
+        <label class="toggle toggle-assertive">
+            <input type="checkbox" ng-model="mainComponent.value" ng-change="onDigitalChanged(mainComponent);">
+            <div class="track">
+                <div class="handle"></div>
+            </div>
+        </label>
+    </li>
+</div>

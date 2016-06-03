@@ -1,5 +1,6 @@
 import logging
 
+from wshubsapi.comm_environment import CommEnvironment
 from wshubsapi.connection_handlers.tornado_handler import ConnectionHandler
 from wshubsapi.connected_client import ConnectedClient
 from enums import ClientType
@@ -23,6 +24,7 @@ class WSHandler(ConnectionHandler):
 
     def __init__(self, application, request, **kwargs):
         super(WSHandler, self).__init__(application, request, **kwargs)
+        self.comm_environment = CommEnvironment.get_instance("Global", serialization_max_depth=8)
         self._connected_client = HousticClient(self.comm_environment, self.write_message, request.remote_ip)
         """:type: HousticClient"""
 

@@ -59,10 +59,11 @@ def construct_component(name, pin, mode):
 
 
 class Module:
-    def __init__(self, id_, type_):
+    def __init__(self, id_):
         self.id = id_
-        self.type = type_
         self.components = list()
+        self.type = None
+
         self.communication_handler = CommunicationHandler(self)
         self.api = Api(self)
 
@@ -74,6 +75,7 @@ class Module:
             for component in data["components"]:
                 print('constructing: {}'.format(component["name"]))
                 self.components.append(construct_component(**component))
+            self.type = data["type"]
 
     def main_loop(self):
         return self.communication_handler.main_loop()

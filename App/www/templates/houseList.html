@@ -1,11 +1,13 @@
 <ion-view view-title="Houses">
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="houseInfo in houses" style="display: flex" ng-click="vewComponent(houseInfo)"
+            <ion-item ng-repeat="houseInfo in houses"
+                      ng-click="vewComponent(houseInfo)"
+                      class="item-icon-left item-icon-right"
+                      ng-class="{house__connected: houseInfo.connected, house__notConnected: !houseInfo.connected }"
                       ng-disabled="!houseInfo.connected">
-                <div style="flex: auto">
+                <i class="icon ion-home"></i>
                     {{houseInfo.formattedName}}
-                </div>
                 <button class="button icon ion-settings"
                         item-right ng-click="viewHouseDetails(houseInfo); $event.stopPropagation();"></button>
             </ion-item>

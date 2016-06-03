@@ -3,7 +3,7 @@ import os
 
 port = 'COM4'
 baudrate = '115200'
-firmware = os.path.join(os.pardir, "firmware", "esp8266-2016-05-03-v1.8.bin")
+firmware = os.path.join(os.pardir, "firmware", "esp8266-2016-06-03-v1.8.1.bin")
 
 
 if not os.path.exists(firmware):

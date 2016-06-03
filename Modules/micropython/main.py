@@ -27,14 +27,14 @@ def resetting(p):
 
 TYPE = "CALDERA"
 ID = "-".join([str(i) for i in unique_id()])
-house_ip = '192.168.1.6' if len(sys.argv) < 2 else sys.argv[1]
+house_ip = '192.168.1.29' if len(sys.argv) < 2 else sys.argv[1]
 port = 7160
 
 start = time.ticks_ms()  # get millisecond counter
 button = Pin(4, Pin.IN)
 button.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=resetting)
 
-module = Module(ID, TYPE)
+module = Module(ID)
 print(module.id)
 module.get_component_by_name("blue").value(1023)
 

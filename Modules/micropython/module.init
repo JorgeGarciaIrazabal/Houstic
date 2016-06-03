@@ -25,5 +25,6 @@
             "mode": 2,
             "name": "light"
         }
-    ]
+    ],
+    "type": "BOILER"
 }
