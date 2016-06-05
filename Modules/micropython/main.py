@@ -27,7 +27,7 @@ def resetting(p):
 
 TYPE = "CALDERA"
 ID = "-".join([str(i) for i in unique_id()])
-house_ip = '192.168.1.29' if len(sys.argv) < 2 else sys.argv[1]
+house_ip = '192.168.1.6' if len(sys.argv) < 2 else sys.argv[1]
 port = 7160
 
 start = time.ticks_ms()  # get millisecond counter

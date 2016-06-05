@@ -21,11 +21,10 @@ subprocess.call([python, esptool,  "--port", port, "--baud", baudrate, "write_fl
 
 
 
-
+# to connect to wifi
 # import network
 # wlan = network.WLAN(network.STA_IF) # create station interface
 # wlan.active(True)       # activate the interface
 # wlan.scan()             # scan for access points
 # wlan.isconnected()      # check if the station is connected to an AP
-# wlan.connect('essid', 'password') # connect to an AP
 # wlan.connect('JAZZTEL_9A3B', 'FA020156120757200985040689')

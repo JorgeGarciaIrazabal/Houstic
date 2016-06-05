@@ -84,9 +84,9 @@ class House(HubsAPI.HouseHubClass.ClientClass):
 
     def reset_module(self, module_id):
         module = self._get_module(module_id)
-        return module.call_in_module("reset").result()
+        module.call_in_module("reset")
 
     def stop_module_communication(self, module_id):
         module = self._get_module(module_id)
-        return module.call_in_module("stop_communication").result()
+        return module.call_in_module("stop_communication")
 

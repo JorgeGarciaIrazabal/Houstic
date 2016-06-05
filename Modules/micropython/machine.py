@@ -92,7 +92,7 @@ class Timer:
     def __init__(self, id_):
         self.id = id_
 
-    def init(self, mode, width=16):
+    def init(self, mode, width=16, period=None, callback=None):
         pass
 
     def deinit(self):
@@ -131,3 +131,6 @@ class PWM:
     def duty(self, duty=None):
         self._duty = duty if duty is not None else self._duty
         return self._duty
+
+
+

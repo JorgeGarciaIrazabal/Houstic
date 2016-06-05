@@ -1,0 +1,27 @@
+<ion-view view-title="House {{houseInfo.name}}">
+    <ion-content>
+
+        <ion-list>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">House name</span>
+                <input type="text" placeholder="House name" ng-model="houseInfo.name">
+            </label>
+            <label class="item">
+                <span class="input-label">IP</span>
+                <label>{{houseInfo.ip}}</label>
+            </label>
+
+
+        </ion-list>
+        <div class="row">
+            <div class="col col-33">
+                <button class="button button-block button-energized" ng-click="rebootHouse()">
+                    Reboot
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-block button-positive" ng-click="saveChanges()">Save</button>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

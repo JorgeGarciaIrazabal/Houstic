@@ -1,11 +1,14 @@
 <div ng-controller="BoilerCtrl">
-    <li class="item item-toggle" ng-lo>
-        {{mainComponent.name}}
+    <ion-item class="item-icon-left" style="display: flex">
+        <i class="icon ion-settings" ng-click="showComponents()"></i>
+        <div style="flex: auto">
+            {{mainComponent.name}}
+        </div>
         <label class="toggle toggle-assertive">
             <input type="checkbox" ng-model="mainComponent.value" ng-change="onDigitalChanged(mainComponent);">
             <div class="track">
                 <div class="handle"></div>
             </div>
         </label>
-    </li>
+    </ion-item>
 </div>

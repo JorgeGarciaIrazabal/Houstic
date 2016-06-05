@@ -3,7 +3,6 @@
  */
 angular.module('houstic.constants')
     .constant('modules', {
-        // Second parameter is 2 to tell server we are a mobile device
         BOILER: {
             templateUrl: "templates/modules/boiler.html",
             controller: "BoilerCtrl"

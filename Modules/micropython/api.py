@@ -1,11 +1,13 @@
 import machine
 import json
+from machine import Timer
 
 
 class Api:
     def __init__(self, module):
         self.module = module
         self.communication_handler = module.communication_handler
+        self.wdt = None
 
     def handle(self, message):
         msg_obj = json.loads(str(message))
@@ -26,7 +28,11 @@ class Api:
         return component.value()
 
     def reset(self):
-        machine.reset()
+        self.stop_communication()
+        print("communication stopped!!!!!!!!")
+        tim = Timer(-1)
+        print("restarting in 2 seconds")
+        tim.init(period=200, mode=Timer.ONE_SHOT, callback=lambda t: machine.reset())
 
     def stop_communication(self):
         self.communication_handler.close_communication()

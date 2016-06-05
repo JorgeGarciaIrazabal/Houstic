@@ -25,6 +25,6 @@ angular.module('houstic.controllers')
                 })
                 .catch(function (error) {
                     console.log(error);
-                });;
+                });
         })
     });
