@@ -1,0 +1,11 @@
+<ion-item ng-controller="AnalogOutCtrl">
+    <div class="item-content">{{component.name}}</div>
+    <div class="range range-positive">
+        <i class="icon ion-minus-circled"></i>
+        <input type="range" name="volume" min="0" max="1024"
+               ng-model="component.value" ng-change="onChanged(component)">
+        <i class="icon ion-plus-circled"></i>
+    </div>
+</ion-item>
+
+
