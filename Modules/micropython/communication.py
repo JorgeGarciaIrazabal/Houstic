@@ -31,6 +31,7 @@ class CommunicationHandler:
         except Exception as e:
             msg_obj['reply'] = str(e)
             msg_obj['success'] = False
+            print(str(e))
         self.write_message(json.dumps(msg_obj))
 
     def _send_handshake(self):

@@ -15,3 +15,5 @@ class ComponentType(IntEnum):
     ANALOG_OUT = 3
     I2C = 4
     SPI = 5
+    DHT11 = 6
+    DHT22 = 7

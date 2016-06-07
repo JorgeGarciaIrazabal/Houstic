@@ -28,13 +28,17 @@ class House(HubsAPI.HouseHubClass.ClientClass):
             raise Exception("No module with id: {}".format(id_))
 
     def on_module_connected(self, handler: ModuleConnection):
+        if handler.id in self.module_connections:
+            self.on_module_closed(handler)
         self.module_connections[handler.id] = handler
         self.log.info("module connected")
 
-    def on_module_closed(self, handler):
-        self.log.warning("module closed")
-        if handler.id in self.module_connections:
-            self.module_connections.pop(handler.id)
+    def on_module_closed(self, handler: ModuleConnection):
+        if not handler.is_closed:
+            handler.is_closed = True
+            self.log.warning("module closed")
+            if handler.id in self.module_connections:
+                self.module_connections.pop(handler.id)
 
     @asynchronous.asynchronous()
     def __auto_reconnect_global_server_api(self, *args):
@@ -46,7 +50,7 @@ class House(HubsAPI.HouseHubClass.ClientClass):
             self.global_server_api.connect()
             if Config.get().id is None:
                 self.log.info("asking for ID")
-                Config.get().id = self.global_server_api.HouseHub.server.create().result()
+                Config.get().id = self.global_server_api.HouseHub.server.create().result(timeout=4)
                 Config.get().store_config_in_file()
                 self.log.info("stored ID: {}".format(Config.get().id))
         except:
@@ -68,7 +72,7 @@ class House(HubsAPI.HouseHubClass.ClientClass):
         for id_, module in self.module_connections.items():
             # todo: do this in parallel
             module_info = dict()
-            module_info["components"] = json.loads(module.call_in_module("get_components").result())
+            module_info["components"] = json.loads(module.call_in_module("get_components").result(timeout=4))
             module_info["id"] = id_
             module_info["type"] = module.type
             modules_info.append(module_info)
@@ -76,11 +80,11 @@ class House(HubsAPI.HouseHubClass.ClientClass):
 
     def component_write(self, module_id, component_index, value):
         module = self._get_module(module_id)
-        return module.call_in_module("component_write", component_index, value).result()
+        return module.call_in_module("component_write", component_index, value).result(timeout=4)
 
     def component_read(self, module_id, component_index):
         module = self._get_module(module_id)
-        return module.call_in_module("component_read", component_index).result()
+        return module.call_in_module("component_read", component_index).result(timeout=4)
 
     def reset_module(self, module_id):
         module = self._get_module(module_id)

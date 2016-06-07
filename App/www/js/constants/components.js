@@ -27,5 +27,14 @@ angular.module('houstic.constants')
         5: {
             templateUrl: "templates/components/SPI.html",
             controller: "SPICtrl"
+        },
+        6: {
+            templateUrl: "templates/components/DHT.html",
+            controller: "DHTCtrl"
+        }
+        ,
+        7: {
+            templateUrl: "templates/components/DHT.html",
+            controller: "DHTCtrl"
         }
     });

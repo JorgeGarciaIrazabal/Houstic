@@ -24,6 +24,7 @@ class ModuleConnection(socketserver.BaseRequestHandler):
         """:type : Future"""
         self.id = None
         self.type = None
+        self.is_closed = None
 
     def __handle_correct_data_received(self, data):
         try:
@@ -38,6 +39,7 @@ class ModuleConnection(socketserver.BaseRequestHandler):
         self._message_separator = MessageSeparator(separator="~")
         self.future = Future()
         self.id = None
+        self.is_closed = False
 
     def call_in_module(self, function_name, *args) -> Future:
         msg = dict(function=function_name, args=args)

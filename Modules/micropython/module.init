@@ -24,6 +24,11 @@
             "pin": 0,
             "mode": 2,
             "name": "light"
+        },
+        {
+            "pin": 2,
+            "mode": 6,
+            "name": "ambient"
         }
     ],
     "type": "BOILER"

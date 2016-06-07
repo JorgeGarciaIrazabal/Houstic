@@ -2,6 +2,7 @@ import json
 import machine
 from communication import CommunicationHandler
 from api import Api
+import dht
 
 
 class Component:
@@ -49,6 +50,40 @@ class AnalogOutComponent(Component):
         return self.pwm.duty()
 
 
+class DHTComponent(Component):
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
+        self.pin = machine.Pin(pin)
+        self.dht = None
+
+    def temperature(self):
+        self.dht.measure()
+        return self.dht.temperature()
+
+    def humidity(self):
+        self.dht.measure()
+        return self.dht.humidity()
+
+    def value(self):
+        try:
+            self.dht.measure()
+            return self.dht.temperature(), self.dht.humidity()
+        except:
+            return None, None
+
+
+class DHT11Component(DHTComponent):
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
+        self.dht = dht.DHT11(self.pin)
+
+
+class DHT22Component(DHTComponent):
+    def __init__(self, name, pin, mode):
+        super().__init__(name, pin, mode)
+        self.dht = dht.DHT22(self.pin)
+
+
 def construct_component(name, pin, mode):
     if mode == 0 or mode == 1:  # digital_in, digital_out
         return DigitalComponent(name, pin, mode)
@@ -56,6 +91,10 @@ def construct_component(name, pin, mode):
         return AnalogInComponent(name, pin, mode)
     elif mode == 3:  # analog_out
         return AnalogOutComponent(name, pin, mode)
+    elif mode == 6:
+        return DHT11Component(name, pin, mode)
+    elif mode == 7:
+        return DHT22Component(name, pin, mode)
 
 
 class Module:

@@ -6,11 +6,11 @@ angular.module('houstic.controllers')
         $scope.houseInfo = $stateParams.houseInfo || {id: "574083ba97d0c72d7883c222", name: "myHouse"};
         $scope.house = HubsApi.HouseHub.getClients($scope.houseInfo.id);
         $scope.module = $stateParams.module || {components: []};
-
         var interval = $interval(function () {
             var sensors = $scope.module.components.filter(function (component) {
-                return component.mode == 2;
+                return [2, 6, 7].indexOf(component.mode) >= 0;
             });
+
             sensors.forEach(function (sensor) {
                 $scope.house.componentRead($scope.module.id, sensor.index)
                     .then(function (value) {
@@ -23,7 +23,7 @@ angular.module('houstic.controllers')
                         }
                     });
             });
-        }, 1000);
+        }, 3000);
 
         $scope.resetModule = function () {
             $scope.house.resetModule($scope.module.id)
